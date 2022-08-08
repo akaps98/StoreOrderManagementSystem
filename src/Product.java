@@ -61,17 +61,17 @@ public class Product {
         newPrice = Integer.parseInt(scanner.nextLine());
                 ;
         while (true) {
-            boolean invalid2 = false;
+            boolean invalid = false;
             System.out.println("Please enter product's category: ");
             newCategory = scanner.nextLine();
             String[] array = newCategory.split(" ");
             for (String s: array){
-                    if (!s.matches("[\\w]")){
+                    if (!s.matches("[\\w]+")){
                         System.out.println("Please enter a valid product's category!");
-                        invalid2 = true;
+                        invalid = true;
                 }
             }
-            if (invalid2) continue;
+            if (invalid) continue;
             break;}
 
         PrintWriter output = new PrintWriter(new FileWriter("product.db", true));
@@ -137,13 +137,58 @@ public class Product {
         while (input.hasNext()) {
             String[] line = input.nextLine().split(",");
             Product product = new Product(line[0], line[1], Integer.parseInt(line[2]), line[3]);
-            System.out.print("Product ID: " + product.getProductID() + '\n' +
-                    "Product Name: " + product.getProductName() + '\n' +
-                    "Product Price: " + product.getProductPrice() + " VND" + '\n' +
-                    "Category: " + product.getCategory() + '\n' +
-                    "--------------------------------------------------" + '\n');
+            printProduct(product);
         }
         input.close();
+    }
+
+    public void printProduct(Product product) {
+        System.out.println("Product ID: " + product.getProductID() + '\n' +
+                "Product Name: " + product.getProductName() + '\n' +
+                "Product Price: " + product.getProductPrice() + " VND" + '\n' +
+                "Category: " + product.getCategory() + '\n' +
+                "--------------------------------------------------");
+    };
+
+    public void sortByPrice() throws FileNotFoundException {
+        ArrayList<Product> sort= new ArrayList<>();
+        Scanner input = new Scanner(new File("product.db"));
+        while (input.hasNext()) {
+            String[] line = input.nextLine().split(",");
+            Product product = new Product(line[0], line[1], Integer.parseInt(line[2]), line[3]);
+            sort.add(product);
+        }
+        input.close();
+        Comparator<Product> compareByPrice = new Comparator<Product>() {
+            @Override
+            public int compare(Product o1, Product o2) {
+                return Integer.toString(o1.getProductPrice()).compareTo(Integer.toString(o2.getProductPrice())) ;
+            }
+        };
+
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            boolean invalid = false;
+            System.out.println("Please enter 1 to sort from low to high and 2 to sort from high to low: ");
+            String sortInt = scanner.nextLine();
+            if (!sortInt.matches("[1-2]") ) {
+                System.out.println("Please enter 1 or 2!");
+                invalid = true;
+            }
+            if (invalid) continue;
+            if (sortInt.equals("1")) {
+                sort.sort(compareByPrice.reversed());
+            } else {
+                sort.sort(compareByPrice);
+            }
+            break;
+        }
+
+
+
+        for (Product product:sort) {
+            printProduct(product);
+        }
     }
 
     public String getProductID() {
