@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -122,7 +119,69 @@ public class Customer {
         System.out.println("Congratulation! Registration has been done!");
     }
 
+    public static void signIn() throws FileNotFoundException {
+        Scanner input = new Scanner(System.in);
 
+        Scanner file = new Scanner(new File("member.db"));
+        ArrayList<String> memberList = new ArrayList<>();
+
+        while(file.hasNext()) {
+            List<String> sen = Arrays.asList(file.nextLine().split("%n"));
+            memberList.add(String.valueOf(sen));
+        }
+
+        String inputUsername, inputPassword;
+        String realPassword = "";
+        String fullname = "";
+        String phoneNumber = "";
+
+        while(true) {
+            System.out.println("-------------------------");
+            System.out.println("Sign In");
+            System.out.println("-------------------------\n");
+            System.out.println("Type username: ");
+            inputUsername = input.nextLine();
+
+            boolean checkUsername = false;
+
+            for (String info : memberList) {
+                String[] eachInfo = info.split(",");
+                if (inputUsername.toLowerCase(Locale.ROOT).matches(eachInfo[2].toLowerCase(Locale.ROOT))) {
+                    realPassword = eachInfo[3];
+                    realPassword = realPassword.substring(0, realPassword.length() - 1);
+                    fullname = eachInfo[0];
+                    fullname = fullname.substring(1);
+                    phoneNumber = eachInfo[1];
+                    inputUsername = eachInfo[2];
+                    checkUsername = true;
+                    break;
+                }
+            }
+
+            if (checkUsername) {
+                break;
+            } else {
+                System.out.println("The username is not exists.");
+                System.out.println("-------------------------");
+            }
+        }
+
+        while(true) {
+            System.out.println("Type password: ");
+            inputPassword = input.nextLine();
+            if(inputPassword.matches(realPassword)) {
+                System.out.println("Successfully logged in!\n");
+                break;
+            } else {
+                System.out.println("Wrong password.");
+                System.out.println("-------------------------");
+            }
+        }
+
+        System.out.printf("%s's User Profile%n", fullname);
+        System.out.println("-------------------------");
+        System.out.printf("Name: %s%nPhone Number: %s%nusername: %s%npassword: %s%n", fullname, phoneNumber, inputUsername, realPassword);
+    }
 
     public String getFullname() {
         return fullname;
