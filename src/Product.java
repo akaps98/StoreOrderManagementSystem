@@ -16,7 +16,7 @@ public class Product {
         this.category = category;
     }
 
-    public boolean checkExistProduct(String product) throws FileNotFoundException {
+    public static boolean checkExistProduct(String product) throws FileNotFoundException {
         Scanner input = new Scanner(new File("product.db"));
         ArrayList<String> exist = new ArrayList<>();
         int count = 0;
@@ -33,7 +33,7 @@ public class Product {
         return count != 0;
     }
 
-    public void addNewProduct() throws IOException {
+    public static void addNewProduct() throws IOException {
         Scanner scanner = new Scanner(System.in);
         String newID = UUID.randomUUID().toString();
         String newName;
@@ -79,7 +79,7 @@ public class Product {
         output.close();
     }
 
-    public void updatePrice() throws IOException {
+    public static void updatePrice() throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter product that you want to update price: ");
         String update = scanner.nextLine();
@@ -110,7 +110,7 @@ public class Product {
         System.out.println("Update completed!");
     };
 
-    public void removeProduct() throws IOException {
+    public static void removeProduct() throws IOException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter product that you want to remove: ");
         String remove = scanner.nextLine();
@@ -132,7 +132,7 @@ public class Product {
         output.close();
         System.out.println("Remove completed!");
     }
-    public void listAllProduct() throws FileNotFoundException {
+    public static void listAllProduct() throws FileNotFoundException {
         Scanner input = new Scanner(new File("product.db"));
         while (input.hasNext()) {
             String[] line = input.nextLine().split(",");
@@ -142,7 +142,7 @@ public class Product {
         input.close();
     }
 
-    public void printProduct(Product product) {
+    public static void printProduct(Product product) {
         System.out.println("Product ID: " + product.getProductID() + '\n' +
                 "Product Name: " + product.getProductName() + '\n' +
                 "Product Price: " + product.getProductPrice() + " VND" + '\n' +
@@ -150,7 +150,7 @@ public class Product {
                 "--------------------------------------------------");
     };
 
-    public void sortByPrice() throws FileNotFoundException {
+    public static void sortByPrice() throws FileNotFoundException {
         ArrayList<Product> sort= new ArrayList<>();
         Scanner input = new Scanner(new File("product.db"));
         while (input.hasNext()) {
@@ -183,8 +183,6 @@ public class Product {
             }
             break;
         }
-
-
 
         for (Product product:sort) {
             printProduct(product);

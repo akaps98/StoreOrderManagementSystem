@@ -13,7 +13,7 @@ public class Category {
     }
 
 
-    public void displayProductByCategory() throws FileNotFoundException {
+    public static void displayProductByCategory() throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
         String nameCategory;
         while (true) {
@@ -34,7 +34,7 @@ public class Category {
                 String[] line = input.nextLine().split(",");
                 Product product = new Product(line[0], line[1], Integer.parseInt(line[2]), line[3]);
                 if (product.getCategory().equalsIgnoreCase(nameCategory)) {
-                    new Product().printProduct(product);
+                    Product.printProduct(product);
                     productList.add(product);
                 };
             }
