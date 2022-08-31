@@ -3,15 +3,19 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class Customer {
+    private String ID;
     private String fullname;
     private String phoneNumber;
+    private String membership;
     private String username;
     private String password;
 
     public Customer() {}
 
-    public Customer(String fullname, String phoneNumber, String username, String password) {
+    public Customer(String ID, String fullname, String phoneNumber, String membership, String username, String password) {
+        this.ID = ID;
         this.fullname = fullname;
+        this.membership = membership;
         this.phoneNumber = phoneNumber;
         this.username = username;
         this.password = password;
@@ -28,7 +32,15 @@ public class Customer {
             memberList.add(String.valueOf(sen));
         }
 
-        String fullname, phoneNumber, username, password;
+        String ID, fullname, phoneNumber, username, password;
+        String membership = "regular";
+
+        if(!(memberList.isEmpty())) {
+            int memberNum = Integer.parseInt(memberList.get(memberList.size() - 1).substring(5, 6)) + 1;
+            ID = "C000%s".formatted(memberNum);
+        } else {
+            ID = "C0001";
+        }
 
         while(true) {
             String mat = "^[a-zA-Z\\s]*$";
@@ -54,7 +66,7 @@ public class Customer {
 
             for(String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if(phoneNumber.matches(eachInfo[1])) {
+                if(phoneNumber.matches(eachInfo[3])) {
                     check = 2;
                 }
             }
@@ -83,7 +95,7 @@ public class Customer {
 
             for(String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if(username.toLowerCase(Locale.ROOT).matches(eachInfo[2].toLowerCase(Locale.ROOT))) {
+                if(username.toLowerCase(Locale.ROOT).matches(eachInfo[4].toLowerCase(Locale.ROOT))) {
                     check = 2;
                 }
             }
@@ -101,7 +113,7 @@ public class Customer {
 
         while(true) {
             String mat = "^[a-zA-Z\\d`~!@#$%^&*()-_=+]*$";
-            System.out.println("Type your password(without any space): ");
+            System.out.println("Type your password(without any space & special letters are allowed.): ");
             password = input.nextLine();
             if(Pattern.matches(mat, password)) {
                 break;
@@ -110,16 +122,15 @@ public class Customer {
             System.out.println("-------------------------");
         }
 
-        Customer newRegister = new Customer(fullname, phoneNumber, username, password);
-
         PrintWriter writeDB = new PrintWriter(new FileWriter("member.db", true));
-        writeDB.printf("%s,%s,%s,%s%n", fullname, phoneNumber, username, password);
+        writeDB.printf("%s,%s,%s,%s,%s,%s%n", ID, fullname, membership, phoneNumber, username, password);
         writeDB.close();
 
         System.out.println("Congratulation! Registration has been done!");
+        System.out.println("---------------------------------------");
     }
 
-    public static void signIn() throws FileNotFoundException {
+    public static String signIn() throws FileNotFoundException {
         Scanner input = new Scanner(System.in);
 
         Scanner file = new Scanner(new File("member.db"));
@@ -131,14 +142,13 @@ public class Customer {
         }
 
         String inputUsername, inputPassword;
+        String ID = "";
+        String membership = "";
         String realPassword = "";
         String fullname = "";
         String phoneNumber = "";
 
         while(true) {
-            System.out.println("-------------------------");
-            System.out.println("Sign In");
-            System.out.println("-------------------------\n");
             System.out.println("Type username: ");
             inputUsername = input.nextLine();
 
@@ -146,13 +156,15 @@ public class Customer {
 
             for (String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if (inputUsername.toLowerCase(Locale.ROOT).matches(eachInfo[2].toLowerCase(Locale.ROOT))) {
-                    realPassword = eachInfo[3];
+                if (inputUsername.toLowerCase(Locale.ROOT).matches(eachInfo[4].toLowerCase(Locale.ROOT))) {
+                    realPassword = eachInfo[5];
                     realPassword = realPassword.substring(0, realPassword.length() - 1);
-                    fullname = eachInfo[0];
-                    fullname = fullname.substring(1);
-                    phoneNumber = eachInfo[1];
-                    inputUsername = eachInfo[2];
+                    ID = eachInfo[0];
+                    ID = ID.substring(1);
+                    fullname = eachInfo[1];
+                    membership = eachInfo[2];
+                    phoneNumber = eachInfo[3];
+                    inputUsername = eachInfo[4];
                     checkUsername = true;
                     break;
                 }
@@ -180,7 +192,10 @@ public class Customer {
 
         System.out.printf("%s's User Profile%n", fullname);
         System.out.println("-------------------------");
-        System.out.printf("Name: %s%nPhone Number: %s%nusername: %s%npassword: %s%n", fullname, phoneNumber, inputUsername, realPassword);
+        System.out.printf("ID: %s%nName: %s%nMembership: %s%nPhone Number: %s%nusername: %s%npassword: %s%n", ID, fullname, membership, phoneNumber, inputUsername, realPassword);
+        System.out.println("-------------------------");
+
+        return inputUsername;
     }
 
     public String getFullname() {
