@@ -1,3 +1,5 @@
+package StoreOrderManagementSystem;
+
 import java.io.*;
 import java.util.*;
 
@@ -51,7 +53,7 @@ public class Product {
                 }
             }
             if (checkExistProduct(newName)) {
-                System.out.println("Product already exists!");
+                System.out.println("StoreOrderManagementSystem.Product already exists!");
                 invalid = true;
             }
             if (invalid) continue;
@@ -137,9 +139,9 @@ public class Product {
         while (input.hasNext()) {
             String[] line = input.nextLine().split(",");
             Product product = new Product(line[0], line[1], Integer.parseInt(line[2]), line[3]);
-            System.out.print("Product ID: " + product.getProductID() + '\n' +
-                    "Product Name: " + product.getProductName() + '\n' +
-                    "Product Price: " + product.getProductPrice() + " VND" + '\n' +
+            System.out.print("StoreOrderManagementSystem.Product ID: " + product.getProductID() + '\n' +
+                    "StoreOrderManagementSystem.Product Name: " + product.getProductName() + '\n' +
+                    "StoreOrderManagementSystem.Product Price: " + product.getProductPrice() + " VND" + '\n' +
                     "Category: " + product.getCategory() + '\n' +
                     "--------------------------------------------------" + '\n');
         }
