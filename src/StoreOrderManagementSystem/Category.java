@@ -13,7 +13,6 @@ public class Category {
         this.categoryProduct = categoryProduct;
     }
 
-
     public static void displayProductByCategory() throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
         String nameCategory;
