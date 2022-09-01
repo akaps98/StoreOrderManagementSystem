@@ -33,13 +33,13 @@ public class ManagementSystem {
 //                }
             } else if (option == 3){
                 // list all the products
-                Product.listAllProduct();
+                Customer.listAllProduct();
             } else if (option == 4){
                 // searching
-                Category.displayProductByCategory();
+                Customer.searchProductsForCategory();
             } else if (option == 5){
                 // list all the products by price
-                Product.sortByPrice();
+                Customer.sortByPrice();
             } else if (option == 0){
                 System.out.println("Thank you for using our order system!");
                 break;

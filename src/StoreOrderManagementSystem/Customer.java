@@ -205,6 +205,18 @@ public class Customer {
         return inputUsername;
     }
 
+    public static void listAllProduct() throws FileNotFoundException {
+        Product.listAllProduct();
+    }
+
+    public static void searchProductsForCategory() throws FileNotFoundException {
+        Category.displayProductByCategory();
+    }
+
+    public static void sortByPrice() throws FileNotFoundException {
+        Product.sortByPrice();
+    }
+
     public String getFullname() {
         return fullname;
     }
