@@ -8,15 +8,17 @@ public class Customer {
     private String ID;
     private String fullname;
     private String phoneNumber;
+    private int spending;
     private String membership;
     private String username;
     private String password;
 
     public Customer() {}
 
-    public Customer(String ID, String fullname, String phoneNumber, String membership, String username, String password) {
+    public Customer(String ID, String fullname, String phoneNumber, int spending, String membership, String username, String password) {
         this.ID = ID;
         this.fullname = fullname;
+        this.spending = spending;
         this.membership = membership;
         this.phoneNumber = phoneNumber;
         this.username = username;
@@ -35,6 +37,7 @@ public class Customer {
         }
 
         String ID, fullname, phoneNumber, username, password;
+        int spending = 0;
         String membership = "regular";
 
         if(!(memberList.isEmpty())) {
@@ -68,7 +71,7 @@ public class Customer {
 
             for(String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if(phoneNumber.matches(eachInfo[3])) {
+                if(phoneNumber.matches(eachInfo[4])) {
                     check = 2;
                 }
             }
@@ -97,7 +100,7 @@ public class Customer {
 
             for(String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if(username.toLowerCase(Locale.ROOT).matches(eachInfo[4].toLowerCase(Locale.ROOT))) {
+                if(username.toLowerCase(Locale.ROOT).matches(eachInfo[5].toLowerCase(Locale.ROOT))) {
                     check = 2;
                 }
             }
@@ -125,7 +128,7 @@ public class Customer {
         }
 
         PrintWriter writeDB = new PrintWriter(new FileWriter("member.db", true));
-        writeDB.printf("%s,%s,%s,%s,%s,%s%n", ID, fullname, membership, phoneNumber, username, password);
+        writeDB.printf("%s,%s,%d,%s,%s,%s,%s%n", ID, fullname, spending, membership, phoneNumber, username, password);
         writeDB.close();
 
         System.out.println("Congratulation! Registration has been done!");
@@ -145,6 +148,7 @@ public class Customer {
 
         String inputUsername, inputPassword;
         String ID = "";
+        String spending = "";
         String membership = "";
         String realPassword = "";
         String fullname = "";
@@ -158,15 +162,16 @@ public class Customer {
 
             for (String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if (inputUsername.toLowerCase(Locale.ROOT).matches(eachInfo[4].toLowerCase(Locale.ROOT))) {
-                    realPassword = eachInfo[5];
+                if (inputUsername.toLowerCase(Locale.ROOT).matches(eachInfo[5].toLowerCase(Locale.ROOT))) {
+                    realPassword = eachInfo[6];
                     realPassword = realPassword.substring(0, realPassword.length() - 1);
                     ID = eachInfo[0];
                     ID = ID.substring(1);
                     fullname = eachInfo[1];
-                    membership = eachInfo[2];
-                    phoneNumber = eachInfo[3];
-                    inputUsername = eachInfo[4];
+                    spending = eachInfo[2];
+                    membership = eachInfo[3];
+                    phoneNumber = eachInfo[4];
+                    inputUsername = eachInfo[5];
                     checkUsername = true;
                     break;
                 }
@@ -194,7 +199,7 @@ public class Customer {
 
         System.out.printf("%s's User Profile%n", fullname);
         System.out.println("-------------------------");
-        System.out.printf("ID: %s%nName: %s%nMembership: %s%nPhone Number: %s%nusername: %s%npassword: %s%n", ID, fullname, membership, phoneNumber, inputUsername, realPassword);
+        System.out.printf("ID: %s%nName: %s%nTotal spending: %s%nMembership: %s%nPhone Number: %s%nusername: %s%npassword: %s%n", ID, fullname, spending, membership, phoneNumber, inputUsername, realPassword);
         System.out.println("-------------------------");
 
         return inputUsername;
