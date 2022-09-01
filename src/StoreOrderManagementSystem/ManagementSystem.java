@@ -29,14 +29,17 @@ public class ManagementSystem {
 //                if(username == adminUsername) {
 //                    admin function (features 8 ~ 12)
 //                } else {
-//                    member function (features 3 ~ 7)
+//                    Member.memberSystem();  // member function (features 3 ~ 7)
 //                }
             } else if (option == 3){
                 // list all the products
+                Product.listAllProduct();
             } else if (option == 4){
                 // searching
+                Category.displayProductByCategory();
             } else if (option == 5){
                 // list all the products by price
+                Product.sortByPrice();
             } else if (option == 0){
                 System.out.println("Thank you for using our order system!");
                 break;

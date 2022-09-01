@@ -236,4 +236,20 @@ public class Customer {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public int getSpending() {
+        return spending;
+    }
+
+    public void setSpending(int spending) {
+        this.spending = spending;
+    }
+
+    public String getMembership() {
+        return membership;
+    }
+
+    public void setMembership(String membership) {
+        this.membership = membership;
+    }
 }
