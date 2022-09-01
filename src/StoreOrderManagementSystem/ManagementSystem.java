@@ -29,7 +29,7 @@ public class ManagementSystem {
 //                if(username == adminUsername) {
 //                    admin function (features 8 ~ 12)
 //                } else {
-//                    member function (features 3 ~ 7)
+//                    Member.memberSystem();  // member function (features 3 ~ 7)
 //                }
             } else if (option == 3){
                 // list all the products
