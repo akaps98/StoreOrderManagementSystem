@@ -84,6 +84,7 @@ public class Product {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter product that you want to update price: ");
         String update = scanner.nextLine();
+        int count = 0;
         Scanner input = new Scanner(new File("product.db"));
         ArrayList<String> newFile = new ArrayList<>();
         while (input.hasNext()) {
@@ -97,6 +98,7 @@ public class Product {
                 List<String> modify = Arrays.asList(lineInfo);
                 modify.set(2, newPrice);
                 newFile.add(String.join(",", modify));
+                count += 1;
             } else {
                 newFile.add(line);
             }
@@ -108,7 +110,11 @@ public class Product {
             output.println(line);
         }
         output.close();
-        System.out.println("Update completed!");
+        if (count == 1) {
+            System.out.println("Update completed!");
+        } else {
+            System.out.println("There is no such product");
+        }
     };
 
     public static void removeProduct() throws IOException {
@@ -192,10 +198,6 @@ public class Product {
 
     public String getProductID() {
         return productID;
-    }
-
-    public void setProductID(String productID) {
-        this.productID = productID;
     }
 
     public String getProductName() {
