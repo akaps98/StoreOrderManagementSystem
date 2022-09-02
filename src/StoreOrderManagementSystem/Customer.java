@@ -135,7 +135,7 @@ public class Customer {
         System.out.println("---------------------------------------");
     }
 
-    public static String signIn() throws FileNotFoundException {
+    public static Customer signIn() throws FileNotFoundException {
         Scanner input = new Scanner(System.in);
 
         Scanner file = new Scanner(new File("member.db"));
@@ -185,24 +185,45 @@ public class Customer {
             }
         }
 
+        System.out.println("Type password: ");
+
         while(true) {
-            System.out.println("Type password: ");
             inputPassword = input.nextLine();
-            if(inputPassword.matches(realPassword)) {
+            if(inputPassword.equals(realPassword)) {
                 System.out.println("Successfully logged in!\n");
                 break;
             } else {
                 System.out.println("Wrong password.");
                 System.out.println("-------------------------");
+                System.out.println("If you want to return main screen, press 1.");
+                System.out.println("If you want to retype password, press 2.");
+                int forgetPassword = input.nextInt();
+                if(forgetPassword == 1) {
+                    return null;
+                } else if(forgetPassword == 2) {
+                    System.out.println("Type password: ");
+                    inputPassword = input.nextLine();
+                    continue;
+                } else {
+                    System.out.println("Please enter the valid number.");
+                }
             }
         }
 
-        System.out.printf("%s's User Profile%n", fullname);
-        System.out.println("-------------------------");
-        System.out.printf("ID: %s%nName: %s%nTotal spending: %s%nMembership: %s%nPhone Number: %s%nusername: %s%npassword: %s%n", ID, fullname, spending, membership, phoneNumber, inputUsername, realPassword);
-        System.out.println("-------------------------");
+        int totalSpending = Integer.parseInt(spending);
 
-        return inputUsername;
+        Customer customer = new Customer(ID, fullname, phoneNumber, totalSpending, membership, inputUsername, realPassword);
+
+        return customer;
+    }
+
+    public static void listProfile(Customer member) {
+        System.out.printf("%s's User Profile%n", member.fullname);
+        System.out.println("-------------------------");
+        System.out.printf("ID: %s%nName: %s%nPhone Number: %s%nMembership: %s%nTotal spending: %s%n", member.getID(), member.getFullname(), member.getPhoneNumber(), member.getMembership(), member.getSpending());
+        System.out.println("-------------------------");
+        System.out.printf("Username: %s%nPassword: %s%n", member.getUsername(), member.getPassword());
+        System.out.println("-------------------------");
     }
 
     public static void listAllProduct() throws FileNotFoundException {
@@ -215,6 +236,14 @@ public class Customer {
 
     public static void sortByPrice() throws FileNotFoundException {
         Product.sortByPrice();
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getFullname() {

@@ -1,6 +1,4 @@
 import StoreOrderManagementSystem.ManagementSystem;
-import StoreOrderManagementSystem.Member;
-import StoreOrderManagementSystem.Product;
 
 import java.io.IOException;
 
