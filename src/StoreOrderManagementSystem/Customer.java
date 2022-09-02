@@ -154,8 +154,9 @@ public class Customer {
         String fullname = "";
         String phoneNumber = "";
 
+        System.out.println("Type username: ");
+
         while(true) {
-            System.out.println("Type username: ");
             inputUsername = input.nextLine();
 
             boolean checkUsername = false;
@@ -182,6 +183,18 @@ public class Customer {
             } else {
                 System.out.println("The username is not exists.");
                 System.out.println("-------------------------");
+                System.out.println("If you want to return main screen, press 1.");
+                System.out.println("If you want to retype username, press 2.");
+                int forgetUsername = input.nextInt();
+                if(forgetUsername == 1) {
+                    return null;
+                } else if(forgetUsername == 2) {
+                    System.out.println("Type username: ");
+                    inputPassword = input.nextLine();
+                    continue;
+                } else {
+                    System.out.println("Please enter the valid number.");
+                }
             }
         }
 
