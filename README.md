@@ -5,5 +5,5 @@
 |:---:|:---:|:---:|
 |s3916884|Junsik Kang|@akaps98|
 |s3926977|Doan Thien Di|@Di-Doan|
-|s3914413|Nguyen Duong Truong Thinh|@TruongThinh14|
+|s3914412|Nguyen Duong Truong Thinh|@TruongThinh14|
 |s3864235|Seungmin Lee|@Seungmin-L|
