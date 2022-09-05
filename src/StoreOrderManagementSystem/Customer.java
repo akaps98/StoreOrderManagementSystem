@@ -41,10 +41,10 @@ public class Customer {
         String membership = "regular";
 
         if(!(memberList.isEmpty())) {
-            int memberNum = Integer.parseInt(memberList.get(memberList.size() - 1).substring(5, 6)) + 1;
-            ID = "C000%s".formatted(memberNum);
+            int memberNum = Integer.parseInt(memberList.get(memberList.size() - 1).substring(2, 3)) + 1;
+            ID = "C%s".formatted(memberNum);
         } else {
-            ID = "C0001";
+            ID = "C1";
         }
 
         while(true) {
