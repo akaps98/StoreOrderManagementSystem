@@ -231,7 +231,7 @@ public class Customer {
     }
 
     public static void listProfile(Customer member) {
-        System.out.printf("%s's User Profile%n", member.fullname);
+        System.out.printf("%s's User Profile%n", member.getFullname());
         System.out.println("-------------------------");
         System.out.printf("ID: %s%nName: %s%nPhone Number: %s%nMembership: %s%nTotal spending: %s%n", member.getID(), member.getFullname(), member.getPhoneNumber(), member.getMembership(), member.getSpending());
         System.out.println("-------------------------");
