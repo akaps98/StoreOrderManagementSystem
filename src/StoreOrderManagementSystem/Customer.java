@@ -8,15 +8,17 @@ public class Customer {
     private String ID;
     private String fullname;
     private String phoneNumber;
+    private int spending;
     private String membership;
     private String username;
     private String password;
 
     public Customer() {}
 
-    public Customer(String ID, String fullname, String phoneNumber, String membership, String username, String password) {
+    public Customer(String ID, String fullname, String phoneNumber, int spending, String membership, String username, String password) {
         this.ID = ID;
         this.fullname = fullname;
+        this.spending = spending;
         this.membership = membership;
         this.phoneNumber = phoneNumber;
         this.username = username;
@@ -35,6 +37,7 @@ public class Customer {
         }
 
         String ID, fullname, phoneNumber, username, password;
+        int spending = 0;
         String membership = "regular";
 
         if(!(memberList.isEmpty())) {
@@ -68,7 +71,7 @@ public class Customer {
 
             for(String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if(phoneNumber.matches(eachInfo[3])) {
+                if(phoneNumber.matches(eachInfo[4])) {
                     check = 2;
                 }
             }
@@ -97,7 +100,7 @@ public class Customer {
 
             for(String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if(username.toLowerCase(Locale.ROOT).matches(eachInfo[4].toLowerCase(Locale.ROOT))) {
+                if(username.toLowerCase(Locale.ROOT).matches(eachInfo[5].toLowerCase(Locale.ROOT))) {
                     check = 2;
                 }
             }
@@ -125,14 +128,14 @@ public class Customer {
         }
 
         PrintWriter writeDB = new PrintWriter(new FileWriter("member.db", true));
-        writeDB.printf("%s,%s,%s,%s,%s,%s%n", ID, fullname, membership, phoneNumber, username, password);
+        writeDB.printf("%s,%s,%d,%s,%s,%s,%s%n", ID, fullname, spending, membership, phoneNumber, username, password);
         writeDB.close();
 
         System.out.println("Congratulation! Registration has been done!");
         System.out.println("---------------------------------------");
     }
 
-    public static String signIn() throws FileNotFoundException {
+    public static Customer signIn() throws FileNotFoundException {
         Scanner input = new Scanner(System.in);
 
         Scanner file = new Scanner(new File("member.db"));
@@ -145,28 +148,31 @@ public class Customer {
 
         String inputUsername, inputPassword;
         String ID = "";
+        String spending = "";
         String membership = "";
         String realPassword = "";
         String fullname = "";
         String phoneNumber = "";
 
+        System.out.println("Type username: ");
+
         while(true) {
-            System.out.println("Type username: ");
             inputUsername = input.nextLine();
 
             boolean checkUsername = false;
 
             for (String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if (inputUsername.toLowerCase(Locale.ROOT).matches(eachInfo[4].toLowerCase(Locale.ROOT))) {
-                    realPassword = eachInfo[5];
+                if (inputUsername.toLowerCase(Locale.ROOT).matches(eachInfo[5].toLowerCase(Locale.ROOT))) {
+                    realPassword = eachInfo[6];
                     realPassword = realPassword.substring(0, realPassword.length() - 1);
                     ID = eachInfo[0];
                     ID = ID.substring(1);
                     fullname = eachInfo[1];
-                    membership = eachInfo[2];
-                    phoneNumber = eachInfo[3];
-                    inputUsername = eachInfo[4];
+                    spending = eachInfo[2];
+                    membership = eachInfo[3];
+                    phoneNumber = eachInfo[4];
+                    inputUsername = eachInfo[5];
                     checkUsername = true;
                     break;
                 }
@@ -177,27 +183,80 @@ public class Customer {
             } else {
                 System.out.println("The username is not exists.");
                 System.out.println("-------------------------");
+                System.out.println("If you want to return main screen, press 1.");
+                System.out.println("If you want to retype username, press 2.");
+                int forgetUsername = input.nextInt();
+                if(forgetUsername == 1) {
+                    return null;
+                } else if(forgetUsername == 2) {
+                    System.out.println("Type username: ");
+                    inputPassword = input.nextLine();
+                    continue;
+                } else {
+                    System.out.println("Please enter the valid number.");
+                }
             }
         }
 
+        System.out.println("Type password: ");
+
         while(true) {
-            System.out.println("Type password: ");
             inputPassword = input.nextLine();
-            if(inputPassword.matches(realPassword)) {
+            if(inputPassword.equals(realPassword)) {
                 System.out.println("Successfully logged in!\n");
                 break;
             } else {
                 System.out.println("Wrong password.");
                 System.out.println("-------------------------");
+                System.out.println("If you want to return main screen, press 1.");
+                System.out.println("If you want to retype password, press 2.");
+                int forgetPassword = input.nextInt();
+                if(forgetPassword == 1) {
+                    return null;
+                } else if(forgetPassword == 2) {
+                    System.out.println("Type password: ");
+                    inputPassword = input.nextLine();
+                    continue;
+                } else {
+                    System.out.println("Please enter the valid number.");
+                }
             }
         }
 
-        System.out.printf("%s's User Profile%n", fullname);
-        System.out.println("-------------------------");
-        System.out.printf("ID: %s%nName: %s%nMembership: %s%nPhone Number: %s%nusername: %s%npassword: %s%n", ID, fullname, membership, phoneNumber, inputUsername, realPassword);
-        System.out.println("-------------------------");
+        int totalSpending = Integer.parseInt(spending);
 
-        return inputUsername;
+        Customer customer = new Customer(ID, fullname, phoneNumber, totalSpending, membership, inputUsername, realPassword);
+
+        return customer;
+    }
+
+    public static void listProfile(Customer member) {
+        System.out.printf("%s's User Profile%n", member.getFullname());
+        System.out.println("-------------------------");
+        System.out.printf("ID: %s%nName: %s%nPhone Number: %s%nMembership: %s%nTotal spending: %s%n", member.getID(), member.getFullname(), member.getPhoneNumber(), member.getMembership(), member.getSpending());
+        System.out.println("-------------------------");
+        System.out.printf("Username: %s%nPassword: %s%n", member.getUsername(), member.getPassword());
+        System.out.println("-------------------------");
+    }
+
+    public static void listAllProduct() throws FileNotFoundException {
+        Product.listAllProduct();
+    }
+
+    public static void searchProductsForCategory() throws FileNotFoundException {
+        Category.displayProductByCategory();
+    }
+
+    public static void sortByPrice() throws FileNotFoundException {
+        Product.sortByPrice();
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
     public String getFullname() {
@@ -230,5 +289,21 @@ public class Customer {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public int getSpending() {
+        return spending;
+    }
+
+    public void setSpending(int spending) {
+        this.spending = spending;
+    }
+
+    public String getMembership() {
+        return membership;
+    }
+
+    public void setMembership(String membership) {
+        this.membership = membership;
     }
 }
