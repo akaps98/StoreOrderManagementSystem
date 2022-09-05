@@ -41,8 +41,13 @@ public class Customer {
         String membership = "regular";
 
         if(!(memberList.isEmpty())) {
-            int memberNum = Integer.parseInt(memberList.get(memberList.size() - 1).substring(2, 3)) + 1;
-            ID = "C%s".formatted(memberNum);
+            String previousMember = memberList.get(memberList.size() - 1).split(",")[0];
+            StringBuilder e = new StringBuilder(previousMember);
+            e.deleteCharAt(0);
+            e.deleteCharAt(0);
+            Integer s = Integer.parseInt(String.valueOf(e));
+            s += 1;
+            ID = "C%s".formatted(s);
         } else {
             ID = "C1";
         }
