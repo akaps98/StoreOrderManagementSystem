@@ -4,13 +4,13 @@ import java.util.*;
 
 public class Order {
     private String id;
-    private Customer customer;
+    private String customer;
     private ArrayList<Product> productsList;
     private String status;
 
     public Order() {};
 
-    public Order(String id, Customer customer, ArrayList<Product> productsList, String status) {
+    public Order(String id, String customer, ArrayList<Product> productsList, String status) {
         this.id = id;
         this.customer = customer;
         this.productsList = productsList;
@@ -25,12 +25,12 @@ public class Order {
         return total;
     }
 
-    public static void addIntoOrder() throws FileNotFoundException {
+    public static Product addIntoOrder() throws FileNotFoundException {
         Scanner scanner = new Scanner(System.in);
         Scanner input = new Scanner(new File("product.db"));
         ArrayList<Product> listOfProduct = new ArrayList<>();
-        ArrayList<Product> orderList = new ArrayList<>();
         String productName;
+        Product newProduct = null;
         while (input.hasNext()) {
             String[] line = input.nextLine().split(",");
             Product p1 = new Product(line[0], line[1], Integer.parseInt(line[2]), line[3]);
@@ -43,7 +43,7 @@ public class Order {
             if (Product.checkExistProduct(productName)) {
                 for (Product p : listOfProduct) {
                     if (productName.equalsIgnoreCase(p.getProductName())) {
-                        orderList.add(p);
+                        newProduct = p;
                     }
                 }
 
@@ -55,8 +55,31 @@ public class Order {
             break;
         }
         System.out.println("Product added successfully!");
-        for (Product p2 : orderList) {
-            Product.printProduct(p2);
+        return newProduct;
+        }
+
+        public static void createNewOrder(String customer) throws IOException {
+            String orderId = UUID.randomUUID().toString();
+            ArrayList<Product> orderProduct = new ArrayList<>();
+            String orderStatus = "UNPAID";
+            Scanner scanner = new Scanner(System.in);
+            while (true) {
+                System.out.println("Please enter y to continue order or n to finish ordering process");
+                String key = scanner.nextLine();
+                if (key.equalsIgnoreCase("y")) {
+                    Product newProduct = Order.addIntoOrder();
+                    orderProduct.add(newProduct);
+                }
+                else if (key.equalsIgnoreCase("n")) {
+                    break;
+                }
+            }
+            for (Product p: orderProduct) {
+                Product.printProduct(p);
+            }
+            PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
+            String line = orderId + "," +  customer + "," + orderStatus;
+            output.close();
         }
     }
-}
+
