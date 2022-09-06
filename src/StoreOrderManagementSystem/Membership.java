@@ -53,29 +53,5 @@ public class Membership {
             update.println(line);
         }
         update.close();
-
-
-        // test code for updating membership (1)
-        try {
-            String filePath = "member.db";
-            FileInputStream fileStream = null;
-
-            fileStream = new FileInputStream(filePath);
-            byte[ ] readBuffer = new byte[fileStream.available()];
-            while (fileStream.read(readBuffer) != -1){
-            }
-            System.out.println(new String(readBuffer));
-
-            fileStream.close();
-        } catch (Exception e) {
-            e.getStackTrace();
-        }
-    }
-
-
-    // test code for updating membership (2)
-    public static void main(String[] args) throws IOException {
-        Membership test = new Membership();
-        test.updateMembership();
     }
 }
