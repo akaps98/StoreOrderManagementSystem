@@ -4,7 +4,7 @@ public class Admin {
     private String username = "group5";
     private String password = "123456";
 
-    public Admin(){};
+    public Admin() {};
 
     public String getUsername() {
         return username;
