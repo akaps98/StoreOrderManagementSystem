@@ -72,14 +72,26 @@ public class Order {
                 }
                 else if (key.equalsIgnoreCase("n")) {
                     break;
+                } else {
+                    System.out.println("Please enter y or n");
                 }
             }
-            for (Product p: orderProduct) {
-                Product.printProduct(p);
+
+            if (!orderProduct.isEmpty()) {
+                ArrayList<String> productName = new ArrayList<>();
+                for (Product p: orderProduct) {
+                    productName.add(p.getProductName());
+                }
+                String listString = String.join("-", productName);
+                PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
+                String line = orderId + ","  +  customer + "," + listString + "," + orderStatus;
+                output.println(line);
+                output.close();
+                System.out.println("You have successfully placed your order!");
+            } else {
+                System.out.println("Goodbye");
             }
-            PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
-            String line = orderId + "," +  customer + "," + orderStatus;
-            output.close();
+
         }
     }
 
