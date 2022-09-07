@@ -114,6 +114,56 @@ public class Order {
 
         }
 
+    public static boolean checkExistCustomer(String customer) throws FileNotFoundException {
+        Scanner input = new Scanner(new File("member.db"));
+        ArrayList<String> exist = new ArrayList<>();
+        int count = 0;
+        while (input.hasNext()) {
+            String[] line = input.nextLine().split(",");
+            exist.add(line[0]);
+        }
+        for (String i: exist) {
+            if (customer.equalsIgnoreCase(i)) {
+                count++;
+            } ;
+        }
+        input.close();
+        return count != 0;
+    }
+
+        public static void getOrderByCustomerID() throws FileNotFoundException {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Please enter the customer's ID: ");
+            String customerID = scanner.nextLine();
+            int count = 0;
+            Scanner input = new Scanner(new File("order.db"));
+
+            ArrayList<Order> orderList = new ArrayList<>();
+            if (!checkExistCustomer(customerID)) {
+                System.out.println("This customer does not exist.");
+            } else {
+                while (input.hasNextLine()) {
+                    String line = input.nextLine();
+                    String[] lineInfo = line.split(",");
+                    String[] productName = lineInfo[2].split("-");
+                    if (customerID.equalsIgnoreCase(lineInfo[1])) {
+                        ArrayList<Product> productList = new ArrayList<>();
+                        for (String s: productName) {
+                            productList.add(Product.findProductByName(s));
+                        }
+                        orderList.add(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3]));
+                    }
+                }
+                if (orderList.size() == 0) {
+                    System.out.println("This customer has no order");
+                } else {
+                    for (Order o: orderList) {
+                        Order.printOrder(o);
+                    }
+                }
+            }
+        }
+
         public static String printProductOfOrder(Order order) {
         ArrayList<String> stringList = new ArrayList<>();
         for (Product product: order.getProductsList()) {
