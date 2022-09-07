@@ -82,9 +82,9 @@ public class Order {
                 for (Product p: orderProduct) {
                     productName.add(p.getProductName());
                 }
-                String listString = String.join(",", productName);
+                String listString = String.join("-", productName);
                 PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
-                String line = orderId + ","  +  customer + "," + "[" + listString + "]" + "," + orderStatus;
+                String line = orderId + ","  +  customer + "," + listString + "," + orderStatus;
                 output.println(line);
                 output.close();
                 System.out.println("You have successfully placed your order!");
