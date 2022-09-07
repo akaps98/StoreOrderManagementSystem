@@ -26,13 +26,13 @@ public class Membership {
                 List<String> upgrade = Arrays.asList(eachInfo);
                 upgrade.set(3, newMembership);
                 after.add(String.join(",", upgrade));
-            } else if((totalSpending > 10000000) && (totalSpending < 250000000)) {
+            } else if((totalSpending > 10000000) && (totalSpending < 25000000)) {
                 discount = 0.10;
                 newMembership = "gold";
                 List<String> upgrade = Arrays.asList(eachInfo);
                 upgrade.set(3, newMembership);
                 after.add(String.join(",", upgrade));
-            } else if(totalSpending > 250000000) {
+            } else if(totalSpending > 25000000) {
                 discount = 0.15;
                 newMembership = "platinum";
                 List<String> upgrade = Arrays.asList(eachInfo);
