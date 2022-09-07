@@ -139,6 +139,18 @@ public class Product {
         output.close();
         System.out.println("Remove completed!");
     }
+
+    public static Product findProductByName(String name) throws FileNotFoundException {
+        Scanner input = new Scanner(new File("product.db"));
+        Product product = null;
+        while (input.hasNext()) {
+            String[] line = input.nextLine().split(",");
+            if (name.equalsIgnoreCase(line[1])) {
+                product = new Product(line[0], line[1], Integer.parseInt(line[2]), line[3]);
+            }
+        }
+        return product;
+    };
     public static void listAllProduct() throws FileNotFoundException {
         Scanner input = new Scanner(new File("product.db"));
         while (input.hasNext()) {
