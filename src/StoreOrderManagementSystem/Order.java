@@ -59,7 +59,27 @@ public class Order {
         }
 
         public static void createNewOrder(String customer) throws IOException {
+            Scanner file = new Scanner(new File("order.db"));
+            ArrayList<String> orderList = new ArrayList<>();
             String orderId = UUID.randomUUID().toString();
+
+            while(file.hasNext()) {
+                List<String> sen = Arrays.asList(file.nextLine().split("%n"));
+                orderList.add(String.valueOf(sen));
+            }
+
+            if(!(orderList.isEmpty())) {
+                String previousOrder = orderList.get(orderList.size() - 1).split(",")[0];
+                StringBuilder e = new StringBuilder(previousOrder);
+                e.deleteCharAt(0);
+                e.deleteCharAt(0);
+                int s = Integer.parseInt(String.valueOf(e));
+                s += 1;
+                orderId = "O%s".formatted(s);
+            } else {
+                orderId = "O1";
+            }
+
             ArrayList<Product> orderProduct = new ArrayList<>();
             String orderStatus = "UNPAID";
             Scanner scanner = new Scanner(System.in);
@@ -93,5 +113,60 @@ public class Order {
             }
 
         }
+
+        public static String printProductOfOrder(Order order) {
+        ArrayList<String> stringList = new ArrayList<>();
+        for (Product product: order.getProductsList()) {
+            stringList.add(
+                    "Product ID: " + product.getProductID() + '\n' +
+                            "Product Name: " + product.getProductName() + '\n' +
+                            "Product Price: " + product.getProductPrice() + " VND" + '\n' +
+                            "Category: " + product.getCategory() + '\n' +
+                            "-------------------------"
+            );
+        }
+            return String.join("\n", stringList);
+        }
+    public static void printOrder(Order order) {
+        System.out.println("Order ID: " + order.getId() + '\n' +
+                "Customer ID: " + order.getCustomer()+ '\n' +
+                "Product List: "  + '\n' +
+                "-------------------------"
+                + '\n' + Order.printProductOfOrder(order) + '\n' +
+                "Status: " + order.getStatus() + '\n' +
+                "--------------------------------------------------");
+    };
+
+    public String getId() {
+        return id;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public ArrayList<Product> getProductsList() {
+        return productsList;
+    }
+
+    public void setProductsList(ArrayList<Product> productsList) {
+        this.productsList = productsList;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}
 

@@ -12,6 +12,11 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        ManagementSystem.orderManagementSystem();
+//        ManagementSystem.orderManagementSystem();
+        ArrayList<Product> proList = new ArrayList<>();
+        proList.add(new Product("dsdfs", "Laptop", 9867243, "Laptop"));
+        proList.add(new Product("dfsrgr", "Laptop Dell", 2897333, "Laptop"));
+        Order newOrder = new Order("O2", "Di", proList, "UNPAID");
+        Order.printOrder(newOrder);
     }
 }
