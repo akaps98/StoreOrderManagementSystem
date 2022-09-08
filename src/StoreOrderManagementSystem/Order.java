@@ -8,16 +8,19 @@ public class Order {
     private ArrayList<Product> productsList;
     private String status;
 
+    private int totalPrice;
+
     public Order() {};
 
-    public Order(String id, String customer, ArrayList<Product> productsList, String status) {
+    public Order(String id, String customer, ArrayList<Product> productsList, String status, int totalPrice) {
         this.id = id;
         this.customer = customer;
         this.productsList = productsList;
         this.status = status;
+        this.totalPrice = totalPrice;
     }
 
-    public int productSum() {
+    public static int productSum(ArrayList<Product> productsList) {
         int total = 0;
         for (Product p : productsList) {
             total += p.getProductPrice();
@@ -97,6 +100,8 @@ public class Order {
                 }
             }
 
+            Order order = new Order(orderId,customer,orderProduct,orderStatus,Order.productSum(orderProduct));
+
             if (!orderProduct.isEmpty()) {
                 ArrayList<String> productName = new ArrayList<>();
                 for (Product p: orderProduct) {
@@ -104,7 +109,7 @@ public class Order {
                 }
                 String listString = String.join("-", productName);
                 PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
-                String line = orderId + ","  +  customer + "," + listString + "," + orderStatus;
+                String line = orderId + ","  +  customer + "," + listString + "," + orderStatus + "," + String.valueOf(order.getTotalPrice());
                 output.println(line);
                 output.close();
                 System.out.println("You have successfully placed your order!");
@@ -150,7 +155,7 @@ public class Order {
                         for (String s: productName) {
                             productList.add(Product.findProductByName(s));
                         }
-                        orderList.add(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3]));
+                        orderList.add(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4])));
                     }
                 }
                 if (orderList.size() == 0) {
@@ -163,7 +168,7 @@ public class Order {
             }
         }
 
-        public static  void memberGetOrderByID(String customerID) throws FileNotFoundException {
+        public static void memberGetOrderByID(String customerID) throws FileNotFoundException {
             Scanner scanner = new Scanner(System.in);
             Scanner input = new Scanner(new File("order.db"));
             int count = 0;
@@ -180,7 +185,7 @@ public class Order {
                         productList.add(Product.findProductByName(s));
                     }
                     count += 1;
-                    Order.printOrder(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3]));
+                    Order.printOrder(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4])));
                 }
             }
             if (count == 0) {
@@ -254,6 +259,7 @@ public class Order {
                 "-------------------------"
                 + '\n' + Order.printProductOfOrder(order) + '\n' +
                 "Status: " + order.getStatus() + '\n' +
+                "Total price: " + order.getTotalPrice() + '\n' +
                 "--------------------------------------------------");
     };
 
@@ -287,6 +293,14 @@ public class Order {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }
 
