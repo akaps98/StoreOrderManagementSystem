@@ -26,7 +26,7 @@ public class Product {
         for (String i: exist) {
            if (product.equalsIgnoreCase(i)) {
                count++;
-           } ;
+           }
         }
         input.close();
         return count != 0;
@@ -58,7 +58,7 @@ public class Product {
 
         System.out.println("Please enter product's price: ");
         newPrice = Integer.parseInt(scanner.nextLine());
-                ;
+
         while (true) {
             boolean invalid = false;
             System.out.println("Please enter product's category: ");
@@ -113,7 +113,7 @@ public class Product {
         } else {
             System.out.println("There is no such product");
         }
-    };
+    }
 
     public static void removeProduct() throws IOException {
         Scanner scanner = new Scanner(System.in);
@@ -148,7 +148,7 @@ public class Product {
             }
         }
         return product;
-    };
+    }
 
     public static void listAllProduct() throws FileNotFoundException {
         Scanner input = new Scanner(new File("product.db"));
@@ -166,7 +166,7 @@ public class Product {
                 "Product Price: " + product.getProductPrice() + " VND" + '\n' +
                 "Category: " + product.getCategory() + '\n' +
                 "--------------------------------------------------");
-    };
+    }
 
     public static void sortByPrice() throws FileNotFoundException {
         ArrayList<Product> sort= new ArrayList<>();
