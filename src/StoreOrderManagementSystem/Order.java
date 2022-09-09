@@ -65,65 +65,65 @@ public class Order {
         }
         System.out.println("Product added successfully!");
         return newProduct;
+    }
+
+    public static void createNewOrder(String customer) throws IOException {
+        Scanner file = new Scanner(new File("order.db"));
+        ArrayList<String> orderList = new ArrayList<>();
+        String orderId = UUID.randomUUID().toString();
+
+        while(file.hasNext()) {
+            List<String> sen = Arrays.asList(file.nextLine().split("%n"));
+            orderList.add(String.valueOf(sen));
         }
 
-        public static void createNewOrder(String customer) throws IOException {
-            Scanner file = new Scanner(new File("order.db"));
-            ArrayList<String> orderList = new ArrayList<>();
-            String orderId = UUID.randomUUID().toString();
-
-            while(file.hasNext()) {
-                List<String> sen = Arrays.asList(file.nextLine().split("%n"));
-                orderList.add(String.valueOf(sen));
-            }
-
-            if(!(orderList.isEmpty())) {
-                String previousOrder = orderList.get(orderList.size() - 1).split(",")[0];
-                StringBuilder e = new StringBuilder(previousOrder);
-                e.deleteCharAt(0);
-                e.deleteCharAt(0);
-                int s = Integer.parseInt(String.valueOf(e));
-                s += 1;
-                orderId = "O%s".formatted(s);
-            } else {
-                orderId = "O1";
-            }
-
-            ArrayList<Product> orderProduct = new ArrayList<>();
-            String orderStatus = "UNPAID";
-            Scanner scanner = new Scanner(System.in);
-            while (true) {
-                System.out.println("Please enter y to continue order or n to finish ordering process");
-                String key = scanner.nextLine();
-                if (key.equalsIgnoreCase("y")) {
-                    Product newProduct = Order.addIntoOrder();
-                    orderProduct.add(newProduct);
-                }
-                else if (key.equalsIgnoreCase("n")) {
-                    break;
-                } else {
-                    System.out.println("Please enter y or n");
-                }
-            }
-
-            Order order = new Order(orderId,customer,orderProduct,orderStatus,Order.productSum(orderProduct));
-
-            if (!orderProduct.isEmpty()) {
-                ArrayList<String> productName = new ArrayList<>();
-                for (Product p: orderProduct) {
-                    productName.add(p.getProductName());
-                }
-                String listString = String.join("-", productName);
-                PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
-                String line = orderId + ","  +  customer + "," + listString + "," + orderStatus + "," + String.valueOf(order.getTotalPrice());
-                output.println(line);
-                output.close();
-                System.out.println("You have successfully placed your order!");
-            } else {
-                System.out.println("Goodbye");
-            }
-
+        if(!(orderList.isEmpty())) {
+            String previousOrder = orderList.get(orderList.size() - 1).split(",")[0];
+            StringBuilder e = new StringBuilder(previousOrder);
+            e.deleteCharAt(0);
+            e.deleteCharAt(0);
+            int s = Integer.parseInt(String.valueOf(e));
+            s += 1;
+            orderId = "O%s".formatted(s);
+        } else {
+            orderId = "O1";
         }
+
+        ArrayList<Product> orderProduct = new ArrayList<>();
+        String orderStatus = "UNPAID";
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("Please enter y to continue order or n to finish ordering process");
+            String key = scanner.nextLine();
+            if (key.equalsIgnoreCase("y")) {
+                Product newProduct = Order.addIntoOrder();
+                orderProduct.add(newProduct);
+            }
+            else if (key.equalsIgnoreCase("n")) {
+                break;
+            } else {
+                System.out.println("Please enter y or n");
+            }
+        }
+
+        Order order = new Order(orderId,customer,orderProduct,orderStatus,Order.productSum(orderProduct));
+
+        if (!orderProduct.isEmpty()) {
+            ArrayList<String> productName = new ArrayList<>();
+            for (Product p: orderProduct) {
+                productName.add(p.getProductName());
+            }
+            String listString = String.join("-", productName);
+            PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
+            String line = orderId + ","  +  customer + "," + listString + "," + orderStatus + "," + String.valueOf(order.getTotalPrice());
+            output.println(line);
+            output.close();
+            System.out.println("You have successfully placed your order!");
+        } else {
+            System.out.println("Goodbye");
+        }
+
+    }
 
     public static boolean checkExistCustomer(String customer) throws FileNotFoundException {
         Scanner input = new Scanner(new File("member.db"));
