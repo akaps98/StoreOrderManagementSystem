@@ -13,9 +13,12 @@ public class Customer {
     private String username;
     private String password;
 
-    public Customer() {}
+    public Customer(String username, String password) { // for admin account
+        this.username = username;
+        this.password = password;
+    }
 
-    public Customer(String ID, String fullname, String phoneNumber, int spending, String membership, String username, String password) {
+    public Customer(String ID, String fullname, int spending, String membership, String phoneNumber, String username, String password) {
         this.ID = ID;
         this.fullname = fullname;
         this.spending = spending;
@@ -105,7 +108,7 @@ public class Customer {
 
             for(String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if(username.toLowerCase(Locale.ROOT).matches(eachInfo[5].toLowerCase(Locale.ROOT))) {
+                if(username.toLowerCase(Locale.ROOT).matches(eachInfo[5].toLowerCase(Locale.ROOT)) || username.toLowerCase(Locale.ROOT).matches("group5")) {
                     check = 2;
                 }
             }
@@ -164,11 +167,39 @@ public class Customer {
         while(true) {
             inputUsername = input.nextLine();
 
+            if(inputUsername.equals("group5")) { // "group5" is username for admin account.
+                realPassword = "cosc2081"; // // "cosc2081" is password for admin account.
+                System.out.println("Type password: ");
+                while(true) {
+                    inputPassword = input.nextLine();
+                    if(inputPassword.equals(realPassword)) { // Upper and lowercase letters must match.
+                        System.out.println("Successfully logged in!\n");
+                        Customer Admin = new Customer(inputUsername, realPassword);
+                        return Admin;
+                    } else {
+                        System.out.println("Wrong password.");
+                        System.out.println("-------------------------");
+                        System.out.println("If you want to return main screen, press 1.");
+                        System.out.println("If you want to retype password, press 2.");
+                        int forgetPassword = input.nextInt();
+                        if(forgetPassword == 1) {
+                            return null;
+                        } else if(forgetPassword == 2) {
+                            System.out.println("Type password: ");
+                            inputPassword = input.nextLine();
+                            continue;
+                        } else {
+                            System.out.println("Please enter the valid number.");
+                        }
+                    }
+                }
+            }
+
             boolean checkUsername = false;
 
             for (String info : memberList) {
                 String[] eachInfo = info.split(",");
-                if (inputUsername.toLowerCase(Locale.ROOT).matches(eachInfo[5].toLowerCase(Locale.ROOT))) {
+                if (inputUsername.equals(eachInfo[5])) { // Upper and lowercase letters must match.
                     realPassword = eachInfo[6];
                     realPassword = realPassword.substring(0, realPassword.length() - 1);
                     ID = eachInfo[0];
@@ -230,7 +261,7 @@ public class Customer {
 
         int totalSpending = Integer.parseInt(spending);
 
-        Customer customer = new Customer(ID, fullname, phoneNumber, totalSpending, membership, inputUsername, realPassword);
+        Customer customer = new Customer(ID, fullname, totalSpending, phoneNumber, membership, inputUsername, realPassword);
 
         return customer;
     }
@@ -242,6 +273,16 @@ public class Customer {
         System.out.println("-------------------------");
         System.out.printf("Username: %s%nPassword: %s%n", member.getUsername(), member.getPassword());
         System.out.println("-------------------------");
+    }
+
+    public static void listAllMembers() throws FileNotFoundException {
+        Scanner input = new Scanner(new File("member.db"));
+        while (input.hasNext()) {
+            String[] line = input.nextLine().split(",");
+            Customer member = new Customer(line[0], line[1], Integer.parseInt(line[2]), line[3], line[4], line[5], line[6]);
+            listProfile(member);
+        }
+        input.close();
     }
 
     public static void listAllProduct() throws FileNotFoundException {

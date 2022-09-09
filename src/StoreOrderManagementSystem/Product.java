@@ -8,8 +8,6 @@ public class Product {
     private int productPrice;
     private String category;
 
-    public Product() {}
-
     public Product(String productID, String productName, int productPrice, String category) {
         this.productID = productID;
         this.productName = productName;
@@ -151,6 +149,7 @@ public class Product {
         }
         return product;
     };
+
     public static void listAllProduct() throws FileNotFoundException {
         Scanner input = new Scanner(new File("product.db"));
         while (input.hasNext()) {

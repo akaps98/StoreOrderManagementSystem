@@ -10,12 +10,18 @@ public class Order {
 
     private int totalPrice;
 
-    public Order() {};
-
     public Order(String id, String customer, ArrayList<Product> productsList, String status, int totalPrice) {
         this.id = id;
         this.customer = customer;
         this.productsList = productsList;
+        this.status = status;
+        this.totalPrice = totalPrice;
+    }
+
+    public Order(String id, String customer, String status, int totalPrice) {
+        this.id = id;
+        this.customer = customer;
+        this.productsList = null;
         this.status = status;
         this.totalPrice = totalPrice;
     }
@@ -240,16 +246,16 @@ public class Order {
     }
 
     public static String printProductOfOrder(Order order) {
-    ArrayList<String> stringList = new ArrayList<>();
-    for (Product product: order.getProductsList()) {
-        stringList.add(
-                "Product ID: " + product.getProductID() + '\n' +
-                        "Product Name: " + product.getProductName() + '\n' +
-                        "Product Price: " + product.getProductPrice() + " VND" + '\n' +
-                        "Category: " + product.getCategory() + '\n' +
-                        "-------------------------"
-        );
-    }
+        ArrayList<String> stringList = new ArrayList<>();
+        for (Product product: order.getProductsList()) {
+            stringList.add(
+                    "Product ID: " + product.getProductID() + '\n' +
+                            "Product Name: " + product.getProductName() + '\n' +
+                            "Product Price: " + product.getProductPrice() + " VND" + '\n' +
+                            "Category: " + product.getCategory() + '\n' +
+                            "-------------------------"
+            );
+        }
         return String.join("\n", stringList);
     }
 
@@ -258,10 +264,35 @@ public class Order {
                 "Customer ID: " + order.getCustomer()+ '\n' +
                 "Product List: "  + '\n' +
                 "-------------------------"
-                + '\n' + Order.printProductOfOrder(order) + '\n' +
+                + '\n' +
                 "Status: " + order.getStatus() + '\n' +
                 "Total price: " + order.getTotalPrice() + '\n' +
                 "--------------------------------------------------");
+    }
+
+    public static void listAllOrders() throws FileNotFoundException{
+        Scanner input = new Scanner(new File("Order.db"));
+        while (input.hasNext()) {
+            int idx = 0;
+            String[] line = input.nextLine().split(",");
+            List<String> productList = Arrays.asList(line[2].split("-"));
+            System.out.println("Order ID: " + line[0]);
+            System.out.println("Customer ID: " + line[1]);
+            System.out.print("Ordered Products: ");
+            for(String product : productList) {
+                if(idx == productList.size() - 1) {
+                    System.out.printf("%s", product);
+                    break;
+                }
+                System.out.printf("%s, ", product);
+                idx++;
+            }
+            System.out.println("");
+            System.out.println("Status: " + line[3]);
+            System.out.println("Total Price: " + line[4]);
+            System.out.println("--------------------------------------------------");
+        }
+        input.close();
     }
 
     public String getId() {

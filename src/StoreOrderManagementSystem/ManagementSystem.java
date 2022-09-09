@@ -1,6 +1,7 @@
 package StoreOrderManagementSystem;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class ManagementSystem {
@@ -26,51 +27,91 @@ public class ManagementSystem {
                 Customer.registration();
             } else if (option == 2) {
                 Customer member = Customer.signIn();
-//                if(member == null) {
-//                    System.out.println("---------------------------------------");
-//                    continue;
-//                } else if(member.getUsername() == Admin.getUsername()) {
-//                    //admin function (features 8 ~ 12)
-//                } else {
-//                    while (true) { // member function (features 3 ~ 7)
-//                        int memberOption;
-//                        System.out.printf("Welcome, %s!%n", member.getFullname());
-//                        System.out.println("Enter the number for the wanted function.");
-//                        System.out.println("---------------------------------------");
-//                        System.out.println("1. Check the user information");
-//                        System.out.println("2. List all the products (no order)");
-//                        System.out.println("3. Search product");
-//                        System.out.println("4. List all the products by price");
-//                        System.out.println("5. Create a new order");
-//                        System.out.println("6. Get information of an order by using order ID");
-//                        System.out.println("0. Logout");
-//                        System.out.println("---------------------------------------");
-//
-//                        memberOption = input.nextInt();
-//
-//                        if (memberOption == 1) {
-//                            Customer.listProfile(member);
-//                        } else if (memberOption == 2) {
-//                            Customer.listAllProduct();
-//                        } else if (memberOption == 3) {
-//                            Customer.searchProductsForCategory();
-//                        } else if (memberOption == 4) {
-//                            Customer.sortByPrice();
-//                        } else if (memberOption == 5) {
-//                            // create a new order
-//                        } else if (memberOption == 6) {
-//                            // get information of an order by using order ID
-//                        } else if (memberOption == 0 ) {
-//                            System.out.println("Successfully logged out!");
-//                            System.out.println("Return to the main screen...");
-//                            System.out.println("---------------------------------------");
-//                            break;
-//                        } else {
-//                            System.out.println("Please enter the valid number.");
-//                            System.out.println("---------------------------------------");
-//                        }
-//                    }
-//                }
+                if(member == null) {
+                    System.out.println("---------------------------------------");
+                    continue;
+                } else if(member.getUsername().equals("group5")) { // "group5" is username for admin account.
+                    while (true) { // member function (features 3 ~ 7)
+                        int adminOption;
+                        System.out.println("This is an administrator option.");
+                        System.out.println("Enter the number for the wanted function.");
+                        System.out.println("---------------------------------------");
+                        System.out.println("1. List all the products");
+                        System.out.println("2. List all the orders");
+                        System.out.println("3. List all the members");
+                        System.out.println("4. Add a new product to the store");
+                        System.out.println("5. Update price of product");
+                        System.out.println("6. Get information of all orders by Customer ID");
+                        System.out.println("7. Change the status of the order");
+                        System.out.println("0. Logout");
+                        System.out.println("---------------------------------------");
+
+                        adminOption = input.nextInt();
+
+                        if (adminOption == 1) {
+                            Admin.printProducts();
+                        } else if (adminOption == 2) {
+                            Admin.printOrders();
+                        } else if (adminOption == 3) {
+                            Admin.printMembers();
+                        } else if (adminOption == 4) {
+                            Admin.addNewProduct();
+                        } else if (adminOption == 5) {
+                            Admin.updatePrice();
+                        } else if (adminOption == 6) {
+                            Admin.memberGetOrderByID();
+                        } else if (adminOption == 7) {
+                            Admin.changeStatus();
+                        } else if (adminOption == 0 ) {
+                            System.out.println("Successfully logged out!");
+                            System.out.println("Return to the main screen...");
+                            System.out.println("---------------------------------------");
+                            break;
+                        } else {
+                            System.out.println("Please enter the valid number.");
+                            System.out.println("---------------------------------------");
+                        }
+                    }
+                } else {
+                    while (true) { // member function (features 3 ~ 7)
+                        int memberOption;
+                        System.out.printf("Welcome, %s!%n", member.getFullname());
+                        System.out.println("Enter the number for the wanted function.");
+                        System.out.println("---------------------------------------");
+                        System.out.println("1. Check the user information");
+                        System.out.println("2. List all the products (no order)");
+                        System.out.println("3. Search product");
+                        System.out.println("4. List all the products by price");
+                        System.out.println("5. Create a new order");
+                        System.out.println("6. Get information of an order by using order ID");
+                        System.out.println("0. Logout");
+                        System.out.println("---------------------------------------");
+
+                        memberOption = input.nextInt();
+
+                        if (memberOption == 1) {
+                            Customer.listProfile(member);
+                        } else if (memberOption == 2) {
+                            Customer.listAllProduct();
+                        } else if (memberOption == 3) {
+                            Customer.searchProductsForCategory();
+                        } else if (memberOption == 4) {
+                            Customer.sortByPrice();
+                        } else if (memberOption == 5) {
+                            // create a new order
+                        } else if (memberOption == 6) {
+                            // get information of an order by using order ID
+                        } else if (memberOption == 0 ) {
+                            System.out.println("Successfully logged out!");
+                            System.out.println("Return to the main screen...");
+                            System.out.println("---------------------------------------");
+                            break;
+                        } else {
+                            System.out.println("Please enter the valid number.");
+                            System.out.println("---------------------------------------");
+                        }
+                    }
+                }
             } else if (option == 3) {
                 Customer.listAllProduct();
             } else if (option == 4) {
