@@ -226,6 +226,7 @@ public class Order {
         String update = scanner.nextLine();
         int count = 0;
         int count2 = 0;
+        boolean rewriteMember = false;
         Scanner input = new Scanner(new File("order.db"));
         Scanner members = new Scanner(new File("member.db"));
         ArrayList<String> newFile = new ArrayList<>();
@@ -262,6 +263,7 @@ public class Order {
                                     String newSpendingValue = Integer.toString(spending);
                                     updateSpending.set(2, newSpendingValue);
                                     updatemember.add(String.join(",", updateSpending));
+                                    rewriteMember = true;
                                     continue;
                                 }
                                 updatemember.add(memberLine);
@@ -291,11 +293,13 @@ public class Order {
         }
         output.close();
 
-        PrintWriter memberOutput = new PrintWriter(new FileWriter("member.db", false));
-        for (String line : updatemember) {
-            memberOutput.println(line);
+        if(rewriteMember) {
+            PrintWriter memberOutput = new PrintWriter(new FileWriter("member.db", false));
+            for (String line : updatemember) {
+                memberOutput.println(line);
+            }
+            memberOutput.close();
         }
-        memberOutput.close();
 
         if (count == 1) {
             System.out.println("Update completed!\n");
@@ -330,7 +334,7 @@ public class Order {
             totalRevenue += o.getTotalPrice();
             printOrder(o);
         }
-        System.out.println("Today's Total revenue(" + today + "): " + totalRevenue + " VND\n");
+        System.out.println("Today's total ordered revenue(" + today + "): " + totalRevenue + " VND\n");
     }
 
     public static String printProductOfOrder(Order order) {
