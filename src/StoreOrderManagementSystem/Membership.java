@@ -15,12 +15,12 @@ public class Membership {
             spending = eachInfo[2];
 
             int totalSpending = Integer.parseInt(spending);
-            if((totalSpending > 5000000) && (totalSpending < 10000000)) {
+            if((totalSpending > 5000000) && (totalSpending <= 10000000)) {
                 newMembership = "silver";
                 List<String> upgrade = Arrays.asList(eachInfo);
                 upgrade.set(3, newMembership);
                 after.add(String.join(",", upgrade));
-            } else if((totalSpending > 10000000) && (totalSpending < 25000000)) {
+            } else if((totalSpending > 10000000) && (totalSpending <= 25000000)) {
                 newMembership = "gold";
                 List<String> upgrade = Arrays.asList(eachInfo);
                 upgrade.set(3, newMembership);
