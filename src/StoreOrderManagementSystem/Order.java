@@ -322,6 +322,7 @@ public class Order {
             System.out.println("");
             System.out.println("Status: " + line[3]);
             System.out.println("Total Price: " + line[4]);
+            System.out.println("Date of Order: " + line[5]);
             System.out.println("--------------------------------------------------");
         }
         input.close();
