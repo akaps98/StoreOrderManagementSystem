@@ -1,4 +1,5 @@
 package StoreOrderManagementSystem;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -32,6 +33,10 @@ public class Admin {
 
     public static void changeStatus() throws IOException {
         Order.changeStatus();
+    }
+
+    public static void reportOfTheDay() throws FileNotFoundException {
+        Order.totalRevenueOfTheDay();
     }
 
     public String getUsername() {

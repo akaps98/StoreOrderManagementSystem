@@ -271,8 +271,7 @@ public class Customer {
         System.out.println("-------------------------");
         System.out.printf("ID: %s%nName: %s%nPhone Number: %s%nMembership: %s%nTotal spending: %s%n", member.getID(), member.getFullname(), member.getPhoneNumber(), member.getMembership(), member.getSpending());
         System.out.println("-------------------------");
-        System.out.printf("Username: %s%nPassword: %s%n", member.getUsername(), member.getPassword());
-        System.out.println("-------------------------");
+        System.out.printf("Username: %s%nPassword: %s%n%n", member.getUsername(), member.getPassword());
     }
 
     public static void listAllMembers() throws FileNotFoundException {
@@ -295,6 +294,14 @@ public class Customer {
 
     public static void sortByPrice() throws FileNotFoundException {
         Product.sortByPrice();
+    }
+
+    public static void memberGetOrderByID(String customerID) throws FileNotFoundException {
+        Order.memberGetOrderByID(customerID);
+    }
+
+    public static void placeOrder(String customerID) throws IOException {
+        Order.createNewOrder(customerID);
     }
 
     public String getID() {
