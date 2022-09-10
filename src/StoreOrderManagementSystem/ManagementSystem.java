@@ -9,7 +9,7 @@ public class ManagementSystem {
         welcomeScreen();
         Scanner input = new Scanner(System.in);
         while (true) {
-            int option;
+            String option;
             System.out.println("Welcome to the order management system.");
             System.out.println("Enter the number for the wanted function.");
             System.out.println("---------------------------------------");
@@ -21,19 +21,19 @@ public class ManagementSystem {
             System.out.println("0. Terminate system");
             System.out.println("---------------------------------------");
 
-            option = input.nextInt();
+            option = input.nextLine();
 
-            if (option == 1) {
+            if (option.equals("1")) {
                 Customer.registration();
-            } else if (option == 2) {
+            } else if (option.equals("2")) {
                 Customer member = Customer.signIn();
                 if(member == null) {
                     System.out.println("---------------------------------------");
                     continue;
                 } else if(member.getUsername().equals("group5")) { // "group5" is username for admin account.
-                    while (true) { // member function (features 3 ~ 7)
-                        int adminOption;
-                        System.out.println("This is an administrator option.");
+                    while (true) { // admin function (features 3 ~ 7)
+                        String adminOption;
+                        System.out.println("This page is for an administrator functions.");
                         System.out.println("Enter the number for the wanted function.");
                         System.out.println("---------------------------------------");
                         System.out.println("1. List all the products");
@@ -43,26 +43,29 @@ public class ManagementSystem {
                         System.out.println("5. Update price of product");
                         System.out.println("6. Get information of all orders by Customer ID");
                         System.out.println("7. Change the status of the order");
+                        System.out.println("8. Today's report");
                         System.out.println("0. Logout");
                         System.out.println("---------------------------------------");
 
-                        adminOption = input.nextInt();
+                        adminOption = input.nextLine();
 
-                        if (adminOption == 1) {
+                        if (adminOption.equals("1")) {
                             Admin.printProducts();
-                        } else if (adminOption == 2) {
+                        } else if (adminOption.equals("2")) {
                             Admin.printOrders();
-                        } else if (adminOption == 3) {
+                        } else if (adminOption.equals("3")) {
                             Admin.printMembers();
-                        } else if (adminOption == 4) {
+                        } else if (adminOption.equals("4")) {
                             Admin.addNewProduct();
-                        } else if (adminOption == 5) {
+                        } else if (adminOption.equals("5")) {
                             Admin.updatePrice();
-                        } else if (adminOption == 6) {
+                        } else if (adminOption.equals("6")) {
                             Admin.memberGetOrderByID();
-                        } else if (adminOption == 7) {
+                        } else if (adminOption.equals("7")) {
                             Admin.changeStatus();
-                        } else if (adminOption == 0 ) {
+                        } else if (adminOption.equals("8")) {
+                            Admin.reportOfTheDay();
+                        } else if (adminOption.equals("0")) {
                             System.out.println("Successfully logged out!");
                             System.out.println("Return to the main screen...");
                             System.out.println("---------------------------------------");
@@ -74,7 +77,7 @@ public class ManagementSystem {
                     }
                 } else {
                     while (true) { // member function (features 3 ~ 7)
-                        int memberOption;
+                        String memberOption;
                         System.out.printf("Welcome, %s!%n", member.getFullname());
                         System.out.println("Enter the number for the wanted function.");
                         System.out.println("---------------------------------------");
@@ -87,21 +90,21 @@ public class ManagementSystem {
                         System.out.println("0. Logout");
                         System.out.println("---------------------------------------");
 
-                        memberOption = input.nextInt();
+                        memberOption = input.nextLine();
 
-                        if (memberOption == 1) {
+                        if (memberOption.equals("1")) {
                             Customer.listProfile(member);
-                        } else if (memberOption == 2) {
+                        } else if (memberOption.equals("2")) {
                             Customer.listAllProduct();
-                        } else if (memberOption == 3) {
+                        } else if (memberOption.equals("3")) {
                             Customer.searchProductsForCategory();
-                        } else if (memberOption == 4) {
+                        } else if (memberOption.equals("4")) {
                             Customer.sortByPrice();
-                        } else if (memberOption == 5) {
-                            // create a new order
-                        } else if (memberOption == 6) {
-                            // get information of an order by using order ID
-                        } else if (memberOption == 0 ) {
+                        } else if (memberOption.equals("5")) {
+                            Customer.placeOrder(member.getID());
+                        } else if (memberOption.equals("6")) {
+                            Customer.memberGetOrderByID(member.getID());
+                        } else if (memberOption.equals("0")) {
                             System.out.println("Successfully logged out!");
                             System.out.println("Return to the main screen...");
                             System.out.println("---------------------------------------");
@@ -112,13 +115,13 @@ public class ManagementSystem {
                         }
                     }
                 }
-            } else if (option == 3) {
+            } else if (option.equals("3")) {
                 Customer.listAllProduct();
-            } else if (option == 4) {
+            } else if (option.equals("4")) {
                 Customer.searchProductsForCategory();
-            } else if (option == 5) {
+            } else if (option.equals("5")) {
                 Customer.sortByPrice();
-            } else if (option == 0) {
+            } else if (option.equals("0")) {
                 System.out.println("Thank you for using our order system!");
                 break;
             } else {
@@ -129,6 +132,7 @@ public class ManagementSystem {
     }
 
     public static void welcomeScreen() {
+        System.out.println(":::::::::::::::::::::::::::::::::::::::");
         System.out.println("COSC2081 GROUP ASSIGNMENT");
         System.out.println("STORE ORDER MANAGEMENT SYSTEM");
         System.out.println("Instructor: Mr. Minh Vu ");
@@ -136,6 +140,7 @@ public class ManagementSystem {
         System.out.println("s3916884, Junsik Kang");
         System.out.println("s3926977, Doan Thien Di");
         System.out.println("s3864235, Seungmin Lee");
-        System.out.println("s3914412, Nguyen Duong Truong Thinh\n");
+        System.out.println("s3914412, Nguyen Duong Truong Thinh");
+        System.out.println(":::::::::::::::::::::::::::::::::::::::");
     }
 }

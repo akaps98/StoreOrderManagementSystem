@@ -13,6 +13,10 @@ public class Order {
 
     private LocalDate date;
 
+    public Order() {
+
+    }
+
     public Order(String id, String customer, ArrayList<Product> productsList, String status, int totalPrice, LocalDate date) {
         this.id = id;
         this.customer = customer;
@@ -20,14 +24,6 @@ public class Order {
         this.status = status;
         this.totalPrice = totalPrice;
         this.date = date;
-    }
-
-    public Order(String id, String customer, String status, int totalPrice) {
-        this.id = id;
-        this.customer = customer;
-        this.productsList = null;
-        this.status = status;
-        this.totalPrice = totalPrice;
     }
 
     public static int productSum(ArrayList<Product> productsList) {
@@ -71,7 +67,7 @@ public class Order {
         return newProduct;
     }
 
-    public static void createNewOrder(String customer) throws IOException {
+    public static void createNewOrder(String customerID) throws IOException {
         Scanner file = new Scanner(new File("order.db"));
         ArrayList<String> orderList = new ArrayList<>();
         String orderId = UUID.randomUUID().toString();
@@ -79,6 +75,18 @@ public class Order {
         while(file.hasNext()) {
             List<String> sen = Arrays.asList(file.nextLine().split("%n"));
             orderList.add(String.valueOf(sen));
+        }
+
+        String membership = "";
+
+        Scanner members = new Scanner(new File("member.db"));
+
+        while (members.hasNext()) {
+            String[] line = members.nextLine().split(",");
+            if(line[0].equals(customerID)) {
+                membership = line[3];
+                break;
+            }
         }
 
         if(!(orderList.isEmpty())) {
@@ -110,7 +118,17 @@ public class Order {
             }
         }
 
-        Order order = new Order(orderId,customer,orderProduct,orderStatus,Order.productSum(orderProduct), LocalDate.now());
+        int totalCost = Order.productSum(orderProduct);
+
+        if(membership.equals("silver")) {
+            totalCost *= 0.95;
+        } else if(membership.equals("gold")) {
+            totalCost *= 0.9;
+        } else if(membership.equals("platinum")) {
+            totalCost *= 0.85;
+        }
+
+        Order order = new Order(orderId, customerID, orderProduct, orderStatus, totalCost, LocalDate.now());
 
         if (!orderProduct.isEmpty()) {
             ArrayList<String> productName = new ArrayList<>();
@@ -119,12 +137,13 @@ public class Order {
             }
             String listString = String.join("-", productName);
             PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
-            String line = orderId + ","  +  customer + "," + listString + "," + orderStatus + "," + order.getTotalPrice() + "," + LocalDate.now();
+            String line = orderId + ","  +  customerID + "," + listString + "," + orderStatus + "," + order.getTotalPrice() + "," + LocalDate.now();
             output.println(line);
             output.close();
             System.out.println("You have successfully placed your order!");
+            System.out.println("Total cost is " + totalCost + "!\n");
         } else {
-            System.out.println("Goodbye");
+            System.out.println("You've ordered nothing.\n");
         }
 
     }
@@ -154,7 +173,7 @@ public class Order {
         ArrayList<Order> orderList = new ArrayList<>();
 
         if (!checkExistCustomer(customerID)) {
-            System.out.println("This customer does not exist.");
+            System.out.println("This customer does not exist.\n");
         } else {
             while (input.hasNextLine()) {
                 String line = input.nextLine();
@@ -169,7 +188,7 @@ public class Order {
                 }
             }
             if (orderList.size() == 0) {
-                System.out.println("This customer has no order");
+                System.out.println("This customer has no order.\n");
             } else {
                 for (Order o: orderList) {
                     Order.printOrder(o);
@@ -199,7 +218,7 @@ public class Order {
             }
         }
         if (count == 0) {
-            System.out.println("There is no order with this ID");
+            System.out.println("There is no order with this ID or This order is not yours.\n");
         }
     }
 
@@ -243,9 +262,9 @@ public class Order {
         }
         output.close();
         if (count == 1) {
-            System.out.println("Update completed!");
+            System.out.println("Update completed!\n");
         } else {
-            System.out.println("There is no such order");
+            System.out.println("There is no such order.\n");
         }
     }
 
@@ -254,6 +273,9 @@ public class Order {
         Scanner input = new Scanner(new File("order.db"));
         ArrayList<Order> newFile = new ArrayList<>();
         int totalRevenue = 0;
+
+        System.out.println("Today(" + today + ")'s report");
+        System.out.println("#########################");
 
         while (input.hasNextLine()) {
             String line = input.nextLine();
@@ -272,7 +294,7 @@ public class Order {
             totalRevenue += o.getTotalPrice();
             printOrder(o);
         }
-        System.out.println("Total revenue of " + today + ": " + totalRevenue + " VND");
+        System.out.println("Today's Total revenue(" + today + "): " + totalRevenue + " VND\n");
     }
 
     public static String printProductOfOrder(Order order) {
@@ -292,14 +314,17 @@ public class Order {
     public static void printOrder(Order order) {
         System.out.println("Order ID: " + order.getId() + '\n' +
                 "Customer ID: " + order.getCustomer()+ '\n' +
-                "Product List: " + '\n' + "-------------------------" + '\n' +
+                "Product List: " + '\n' +
+                "-------------------------" + '\n' +
+                "-------------------------" + '\n' +
                 printProductOfOrder(order)  + '\n' +
                 "-------------------------"
                 + '\n' +
                 "Status: " + order.getStatus() + '\n' +
                 "Total price: " + order.getTotalPrice() + " VND" + '\n' +
                 "Date of order: " + order.getDate() + '\n' +
-                "--------------------------------------------------");
+                //"--------------------------------------------------" +
+                "**************************************************");
     }
 
     public static void listAllOrders() throws FileNotFoundException{

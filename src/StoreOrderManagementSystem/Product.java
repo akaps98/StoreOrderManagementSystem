@@ -65,13 +65,15 @@ public class Product {
             newCategory = scanner.nextLine();
             String[] array = newCategory.split(" ");
             for (String s: array){
-                    if (!s.matches("[\\w]+")){
-                        System.out.println("Please enter a valid product's category!");
-                        invalid = true;
+                if (!s.matches("[\\w]+")){
+                    System.out.println("Please enter a valid product's category!\n");
+                    invalid = true;
                 }
             }
             if (invalid) continue;
-            break;}
+            System.out.println("New product has been added!\n");
+            break;
+        }
 
         PrintWriter output = new PrintWriter(new FileWriter("product.db", true));
         output.println(newID + "," + newName + "," + newPrice + "," + newCategory);
@@ -109,9 +111,9 @@ public class Product {
         }
         output.close();
         if (count == 1) {
-            System.out.println("Update completed!");
+            System.out.println("Update completed!\n");
         } else {
-            System.out.println("There is no such product");
+            System.out.println("There is no such product!\n");
         }
     }
 
