@@ -1,7 +1,6 @@
 package StoreOrderManagementSystem;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class ManagementSystem {
@@ -40,10 +39,11 @@ public class ManagementSystem {
                         System.out.println("2. List all the orders");
                         System.out.println("3. List all the members");
                         System.out.println("4. Add a new product to the store");
-                        System.out.println("5. Update price of product");
-                        System.out.println("6. Get information of all orders by Customer ID");
-                        System.out.println("7. Change the status of the order");
-                        System.out.println("8. Today's report");
+                        System.out.println("5. Remove product");
+                        System.out.println("6. Update price of product");
+                        System.out.println("7. Get information of all orders by Customer ID");
+                        System.out.println("8. Change the status of the order");
+                        System.out.println("9. Today's report");
                         System.out.println("0. Logout");
                         System.out.println("---------------------------------------");
 
@@ -58,12 +58,14 @@ public class ManagementSystem {
                         } else if (adminOption.equals("4")) {
                             Admin.addNewProduct();
                         } else if (adminOption.equals("5")) {
-                            Admin.updatePrice();
+                            Admin.removeProduct();
                         } else if (adminOption.equals("6")) {
-                            Admin.memberGetOrderByID();
+                            Admin.updatePrice();
                         } else if (adminOption.equals("7")) {
-                            Admin.changeStatus();
+                            Admin.memberGetOrderByID();
                         } else if (adminOption.equals("8")) {
+                            Admin.changeStatus();
+                        } else if (adminOption.equals("9")) {
                             Admin.reportOfTheDay();
                         } else if (adminOption.equals("0")) {
                             System.out.println("Successfully logged out!");

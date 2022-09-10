@@ -1,4 +1,5 @@
 package StoreOrderManagementSystem;
+
 import java.io.*;
 import java.util.*;
 
@@ -137,7 +138,7 @@ public class Product {
             output.println(line);
         }
         output.close();
-        System.out.println("Remove completed!");
+        System.out.println("Remove completed!\n");
     }
 
     public static Product findProductByName(String name) throws FileNotFoundException {
