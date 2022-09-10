@@ -1,7 +1,4 @@
-import StoreOrderManagementSystem.Customer;
-import StoreOrderManagementSystem.ManagementSystem;
-import StoreOrderManagementSystem.Order;
-import StoreOrderManagementSystem.Product;
+import StoreOrderManagementSystem.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +9,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-//        ManagementSystem.orderManagementSystem();
-            Order.getOrderByCustomerID();
+        ManagementSystem.orderManagementSystem();
     }
 }

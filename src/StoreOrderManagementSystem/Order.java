@@ -10,12 +10,18 @@ public class Order {
 
     private int totalPrice;
 
-    public Order() {};
-
     public Order(String id, String customer, ArrayList<Product> productsList, String status, int totalPrice) {
         this.id = id;
         this.customer = customer;
         this.productsList = productsList;
+        this.status = status;
+        this.totalPrice = totalPrice;
+    }
+
+    public Order(String id, String customer, String status, int totalPrice) {
+        this.id = id;
+        this.customer = customer;
+        this.productsList = null;
         this.status = status;
         this.totalPrice = totalPrice;
     }
@@ -59,65 +65,65 @@ public class Order {
         }
         System.out.println("Product added successfully!");
         return newProduct;
+    }
+
+    public static void createNewOrder(String customer) throws IOException {
+        Scanner file = new Scanner(new File("order.db"));
+        ArrayList<String> orderList = new ArrayList<>();
+        String orderId = UUID.randomUUID().toString();
+
+        while(file.hasNext()) {
+            List<String> sen = Arrays.asList(file.nextLine().split("%n"));
+            orderList.add(String.valueOf(sen));
         }
 
-        public static void createNewOrder(String customer) throws IOException {
-            Scanner file = new Scanner(new File("order.db"));
-            ArrayList<String> orderList = new ArrayList<>();
-            String orderId = UUID.randomUUID().toString();
-
-            while(file.hasNext()) {
-                List<String> sen = Arrays.asList(file.nextLine().split("%n"));
-                orderList.add(String.valueOf(sen));
-            }
-
-            if(!(orderList.isEmpty())) {
-                String previousOrder = orderList.get(orderList.size() - 1).split(",")[0];
-                StringBuilder e = new StringBuilder(previousOrder);
-                e.deleteCharAt(0);
-                e.deleteCharAt(0);
-                int s = Integer.parseInt(String.valueOf(e));
-                s += 1;
-                orderId = "O%s".formatted(s);
-            } else {
-                orderId = "O1";
-            }
-
-            ArrayList<Product> orderProduct = new ArrayList<>();
-            String orderStatus = "UNPAID";
-            Scanner scanner = new Scanner(System.in);
-            while (true) {
-                System.out.println("Please enter y to continue order or n to finish ordering process");
-                String key = scanner.nextLine();
-                if (key.equalsIgnoreCase("y")) {
-                    Product newProduct = Order.addIntoOrder();
-                    orderProduct.add(newProduct);
-                }
-                else if (key.equalsIgnoreCase("n")) {
-                    break;
-                } else {
-                    System.out.println("Please enter y or n");
-                }
-            }
-
-            Order order = new Order(orderId,customer,orderProduct,orderStatus,Order.productSum(orderProduct));
-
-            if (!orderProduct.isEmpty()) {
-                ArrayList<String> productName = new ArrayList<>();
-                for (Product p: orderProduct) {
-                    productName.add(p.getProductName());
-                }
-                String listString = String.join("-", productName);
-                PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
-                String line = orderId + ","  +  customer + "," + listString + "," + orderStatus + "," + String.valueOf(order.getTotalPrice());
-                output.println(line);
-                output.close();
-                System.out.println("You have successfully placed your order!");
-            } else {
-                System.out.println("Goodbye");
-            }
-
+        if(!(orderList.isEmpty())) {
+            String previousOrder = orderList.get(orderList.size() - 1).split(",")[0];
+            StringBuilder e = new StringBuilder(previousOrder);
+            e.deleteCharAt(0);
+            e.deleteCharAt(0);
+            int s = Integer.parseInt(String.valueOf(e));
+            s += 1;
+            orderId = "O%s".formatted(s);
+        } else {
+            orderId = "O1";
         }
+
+        ArrayList<Product> orderProduct = new ArrayList<>();
+        String orderStatus = "UNPAID";
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            System.out.println("Please enter y to continue order or n to finish ordering process");
+            String key = scanner.nextLine();
+            if (key.equalsIgnoreCase("y")) {
+                Product newProduct = Order.addIntoOrder();
+                orderProduct.add(newProduct);
+            }
+            else if (key.equalsIgnoreCase("n")) {
+                break;
+            } else {
+                System.out.println("Please enter y or n");
+            }
+        }
+
+        Order order = new Order(orderId,customer,orderProduct,orderStatus,Order.productSum(orderProduct));
+
+        if (!orderProduct.isEmpty()) {
+            ArrayList<String> productName = new ArrayList<>();
+            for (Product p: orderProduct) {
+                productName.add(p.getProductName());
+            }
+            String listString = String.join("-", productName);
+            PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
+            String line = orderId + ","  +  customer + "," + listString + "," + orderStatus + "," + String.valueOf(order.getTotalPrice());
+            output.println(line);
+            output.close();
+            System.out.println("You have successfully placed your order!");
+        } else {
+            System.out.println("Goodbye");
+        }
+
+    }
 
     public static boolean checkExistCustomer(String customer) throws FileNotFoundException {
         Scanner input = new Scanner(new File("member.db"));
@@ -136,110 +142,110 @@ public class Order {
         return count != 0;
     }
 
-        public static void getOrderByCustomerID() throws FileNotFoundException {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Please enter the customer's ID: ");
-            String customerID = scanner.nextLine();
-            Scanner input = new Scanner(new File("order.db"));
-            ArrayList<Order> orderList = new ArrayList<>();
+    public static void getOrderByCustomerID() throws FileNotFoundException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter the customer's ID: ");
+        String customerID = scanner.nextLine();
+        Scanner input = new Scanner(new File("order.db"));
+        ArrayList<Order> orderList = new ArrayList<>();
 
-            if (!checkExistCustomer(customerID)) {
-                System.out.println("This customer does not exist.");
-            } else {
-                while (input.hasNextLine()) {
-                    String line = input.nextLine();
-                    String[] lineInfo = line.split(",");
-                    String[] productName = lineInfo[2].split("-");
-                    if (customerID.equalsIgnoreCase(lineInfo[1])) {
-                        ArrayList<Product> productList = new ArrayList<>();
-                        for (String s: productName) {
-                            productList.add(Product.findProductByName(s));
-                        }
-                        orderList.add(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4])));
-                    }
-                }
-                if (orderList.size() == 0) {
-                    System.out.println("This customer has no order");
-                } else {
-                    for (Order o: orderList) {
-                        Order.printOrder(o);
-                    }
-                }
-            }
-        }
-
-        public static void memberGetOrderByID(String customerID) throws FileNotFoundException {
-            Scanner scanner = new Scanner(System.in);
-            Scanner input = new Scanner(new File("order.db"));
-            int count = 0;
-            System.out.println("Please enter the order's ID: ");
-            String orderID = scanner.nextLine();
-
+        if (!checkExistCustomer(customerID)) {
+            System.out.println("This customer does not exist.");
+        } else {
             while (input.hasNextLine()) {
                 String line = input.nextLine();
                 String[] lineInfo = line.split(",");
                 String[] productName = lineInfo[2].split("-");
-                if (customerID.equalsIgnoreCase(lineInfo[1]) && orderID.equalsIgnoreCase(lineInfo[0])) {
+                if (customerID.equalsIgnoreCase(lineInfo[1])) {
                     ArrayList<Product> productList = new ArrayList<>();
                     for (String s: productName) {
                         productList.add(Product.findProductByName(s));
                     }
-                    count += 1;
-                    Order.printOrder(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4])));
+                    orderList.add(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4])));
                 }
             }
-            if (count == 0) {
-                System.out.println("There is no order with this ID");
+            if (orderList.size() == 0) {
+                System.out.println("This customer has no order");
+            } else {
+                for (Order o: orderList) {
+                    Order.printOrder(o);
+                }
             }
         }
+    }
 
-        public static void changeStatus() throws IOException {
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Please enter orderID that you want to change status: ");
-            String update = scanner.nextLine();
-            int count = 0;
-            Scanner input = new Scanner(new File("order.db"));
-            ArrayList<String> newFile = new ArrayList<>();
+    public static void memberGetOrderByID(String customerID) throws FileNotFoundException {
+        Scanner scanner = new Scanner(System.in);
+        Scanner input = new Scanner(new File("order.db"));
+        int count = 0;
+        System.out.println("Please enter the order's ID: ");
+        String orderID = scanner.nextLine();
 
-            while (input.hasNext()) {
-                String line = input.nextLine();
-                String[] lineInfo = line.split(",");
-                if (update.equalsIgnoreCase(lineInfo[0])) {
-                    System.out.println("Current status is " + lineInfo[3] );
-                    Scanner statusScanner = new Scanner(System.in);
-                    while (true) {
-                        System.out.println("Please enter the status you want to update: ");
-                        String newStatus = statusScanner.nextLine();
-                        if (newStatus.equalsIgnoreCase("UNPAID") || newStatus.equalsIgnoreCase("PAID"))   {
-                            List<String> modify = Arrays.asList(lineInfo);
-                            modify.set(3, newStatus.toUpperCase());
-                            newFile.add(String.join(",", modify));
-                            count += 1;
-                            break;
-                        } else {
-                            System.out.println("Please enter Paid or Unpaid");
-                        }
-                    }
-
-                } else {
-                    newFile.add(line);
+        while (input.hasNextLine()) {
+            String line = input.nextLine();
+            String[] lineInfo = line.split(",");
+            String[] productName = lineInfo[2].split("-");
+            if (customerID.equalsIgnoreCase(lineInfo[1]) && orderID.equalsIgnoreCase(lineInfo[0])) {
+                ArrayList<Product> productList = new ArrayList<>();
+                for (String s: productName) {
+                    productList.add(Product.findProductByName(s));
                 }
+                count += 1;
+                Order.printOrder(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4])));
             }
-            input.close();
+        }
+        if (count == 0) {
+            System.out.println("There is no order with this ID");
+        }
+    }
 
-            PrintWriter output = new PrintWriter(new FileWriter("order.db", false));
-            for (String line:newFile) {
-                output.println(line);
-            }
-            output.close();
-            if (count == 1) {
-                System.out.println("Update completed!");
+    public static void changeStatus() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Please enter orderID that you want to change status: ");
+        String update = scanner.nextLine();
+        int count = 0;
+        Scanner input = new Scanner(new File("order.db"));
+        ArrayList<String> newFile = new ArrayList<>();
+
+        while (input.hasNext()) {
+            String line = input.nextLine();
+            String[] lineInfo = line.split(",");
+            if (update.equalsIgnoreCase(lineInfo[0])) {
+                System.out.println("Current status is " + lineInfo[3] );
+                Scanner statusScanner = new Scanner(System.in);
+                while (true) {
+                    System.out.println("Please enter the status you want to update: ");
+                    String newStatus = statusScanner.nextLine();
+                    if (newStatus.equalsIgnoreCase("UNPAID") || newStatus.equalsIgnoreCase("PAID"))   {
+                        List<String> modify = Arrays.asList(lineInfo);
+                        modify.set(3, newStatus.toUpperCase());
+                        newFile.add(String.join(",", modify));
+                        count += 1;
+                        break;
+                    } else {
+                        System.out.println("Please enter Paid or Unpaid");
+                    }
+                }
+
             } else {
-                System.out.println("There is no such order");
+                newFile.add(line);
             }
-        };
+        }
+        input.close();
 
-        public static String printProductOfOrder(Order order) {
+        PrintWriter output = new PrintWriter(new FileWriter("order.db", false));
+        for (String line:newFile) {
+            output.println(line);
+        }
+        output.close();
+        if (count == 1) {
+            System.out.println("Update completed!");
+        } else {
+            System.out.println("There is no such order");
+        }
+    }
+
+    public static String printProductOfOrder(Order order) {
         ArrayList<String> stringList = new ArrayList<>();
         for (Product product: order.getProductsList()) {
             stringList.add(
@@ -250,18 +256,44 @@ public class Order {
                             "-------------------------"
             );
         }
-            return String.join("\n", stringList);
-        }
+        return String.join("\n", stringList);
+    }
+
     public static void printOrder(Order order) {
         System.out.println("Order ID: " + order.getId() + '\n' +
                 "Customer ID: " + order.getCustomer()+ '\n' +
                 "Product List: "  + '\n' +
                 "-------------------------"
-                + '\n' + Order.printProductOfOrder(order) + '\n' +
+                + '\n' +
                 "Status: " + order.getStatus() + '\n' +
                 "Total price: " + order.getTotalPrice() + '\n' +
                 "--------------------------------------------------");
-    };
+    }
+
+    public static void listAllOrders() throws FileNotFoundException{
+        Scanner input = new Scanner(new File("Order.db"));
+        while (input.hasNext()) {
+            int idx = 0;
+            String[] line = input.nextLine().split(",");
+            List<String> productList = Arrays.asList(line[2].split("-"));
+            System.out.println("Order ID: " + line[0]);
+            System.out.println("Customer ID: " + line[1]);
+            System.out.print("Ordered Products: ");
+            for(String product : productList) {
+                if(idx == productList.size() - 1) {
+                    System.out.printf("%s", product);
+                    break;
+                }
+                System.out.printf("%s, ", product);
+                idx++;
+            }
+            System.out.println("");
+            System.out.println("Status: " + line[3]);
+            System.out.println("Total Price: " + line[4]);
+            System.out.println("--------------------------------------------------");
+        }
+        input.close();
+    }
 
     public String getId() {
         return id;
