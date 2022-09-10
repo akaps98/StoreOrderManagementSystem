@@ -120,12 +120,10 @@ public class Order {
 
         int totalCost = Order.productSum(orderProduct);
 
-        if(membership.equals("silver")) {
-            totalCost *= 0.95;
-        } else if(membership.equals("gold")) {
-            totalCost *= 0.9;
-        } else if(membership.equals("platinum")) {
-            totalCost *= 0.85;
+        switch (membership) {
+            case "silver" -> totalCost *= 0.95;
+            case "gold" -> totalCost *= 0.9;
+            case "platinum" -> totalCost *= 0.85;
         }
 
         Order order = new Order(orderId, customerID, orderProduct, orderStatus, totalCost, LocalDate.now());
@@ -227,6 +225,7 @@ public class Order {
         System.out.println("Please enter orderID that you want to change status: ");
         String update = scanner.nextLine();
         int count = 0;
+        int count2 = 0;
         Scanner input = new Scanner(new File("order.db"));
         ArrayList<String> newFile = new ArrayList<>();
 
@@ -236,20 +235,30 @@ public class Order {
             if (update.equalsIgnoreCase(lineInfo[0])) {
                 System.out.println("Current status is " + lineInfo[3] );
                 Scanner statusScanner = new Scanner(System.in);
-                while (true) {
-                    System.out.println("Please enter the status you want to update: ");
-                    String newStatus = statusScanner.nextLine();
-                    if (newStatus.equalsIgnoreCase("UNPAID") || newStatus.equalsIgnoreCase("PAID"))   {
-                        List<String> modify = Arrays.asList(lineInfo);
-                        modify.set(3, newStatus.toUpperCase());
-                        newFile.add(String.join(",", modify));
-                        count += 1;
-                        break;
-                    } else {
-                        System.out.println("Please enter Paid or Unpaid");
+                if (lineInfo[3].equalsIgnoreCase("PAID")) {
+                    newFile.add(line);
+                    count2 += 1;
+                    System.out.println("You cannot change the status of PAID orders");
+                } else {
+                    while (true) {
+                        System.out.println("Please enter y if you want to update the status to PAID or n to cancel: ");
+                        String newStatus = statusScanner.nextLine();
+                        if (newStatus.equalsIgnoreCase("y"))   {
+                            List<String> modify = Arrays.asList(lineInfo);
+                            modify.set(3, "PAID");
+                            newFile.add(String.join(",", modify));
+                            count += 1;
+                            break;
+                        } else if (newStatus.equalsIgnoreCase("n")) {
+                            newFile.add(line);
+                            count2 += 1;
+                            System.out.println("This order's status will remain UNPAID");
+                            break;
+                        } else {
+                            System.out.println("Please enter y or n");
+                        }
                     }
                 }
-
             } else {
                 newFile.add(line);
             }
@@ -263,7 +272,7 @@ public class Order {
         output.close();
         if (count == 1) {
             System.out.println("Update completed!\n");
-        } else {
+        } else if (count2 != 1) {
             System.out.println("There is no such order.\n");
         }
     }

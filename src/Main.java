@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        ManagementSystem.orderManagementSystem();
+//        ManagementSystem.orderManagementSystem();
+        Order.changeStatus();
     }
 }
