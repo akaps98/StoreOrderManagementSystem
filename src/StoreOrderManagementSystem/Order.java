@@ -1,5 +1,7 @@
 package StoreOrderManagementSystem;
 import java.io.*;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Order {
@@ -7,15 +9,17 @@ public class Order {
     private String customer;
     private ArrayList<Product> productsList;
     private String status;
-
     private int totalPrice;
 
-    public Order(String id, String customer, ArrayList<Product> productsList, String status, int totalPrice) {
+    private LocalDate date;
+
+    public Order(String id, String customer, ArrayList<Product> productsList, String status, int totalPrice, LocalDate date) {
         this.id = id;
         this.customer = customer;
         this.productsList = productsList;
         this.status = status;
         this.totalPrice = totalPrice;
+        this.date = date;
     }
 
     public Order(String id, String customer, String status, int totalPrice) {
@@ -106,7 +110,7 @@ public class Order {
             }
         }
 
-        Order order = new Order(orderId,customer,orderProduct,orderStatus,Order.productSum(orderProduct));
+        Order order = new Order(orderId,customer,orderProduct,orderStatus,Order.productSum(orderProduct), LocalDate.now());
 
         if (!orderProduct.isEmpty()) {
             ArrayList<String> productName = new ArrayList<>();
@@ -115,7 +119,7 @@ public class Order {
             }
             String listString = String.join("-", productName);
             PrintWriter output = new PrintWriter(new FileWriter("order.db", true));
-            String line = orderId + ","  +  customer + "," + listString + "," + orderStatus + "," + String.valueOf(order.getTotalPrice());
+            String line = orderId + ","  +  customer + "," + listString + "," + orderStatus + "," + order.getTotalPrice() + "," + LocalDate.now();
             output.println(line);
             output.close();
             System.out.println("You have successfully placed your order!");
@@ -161,7 +165,7 @@ public class Order {
                     for (String s: productName) {
                         productList.add(Product.findProductByName(s));
                     }
-                    orderList.add(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4])));
+                    orderList.add(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4]), LocalDate.parse(lineInfo[5])));
                 }
             }
             if (orderList.size() == 0) {
@@ -191,7 +195,7 @@ public class Order {
                     productList.add(Product.findProductByName(s));
                 }
                 count += 1;
-                Order.printOrder(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4])));
+                Order.printOrder(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4]), LocalDate.parse(lineInfo[5])));
             }
         }
         if (count == 0) {
@@ -245,6 +249,32 @@ public class Order {
         }
     }
 
+    public static void totalRevenueOfTheDay() throws FileNotFoundException {
+        String today = LocalDate.now().toString();
+        Scanner input = new Scanner(new File("order.db"));
+        ArrayList<Order> newFile = new ArrayList<>();
+        int totalRevenue = 0;
+
+        while (input.hasNextLine()) {
+            String line = input.nextLine();
+            String[] lineInfo = line.split(",");
+            String[] productName = lineInfo[2].split("-");
+            if (today.equalsIgnoreCase(lineInfo[5])) {
+                ArrayList<Product> productList = new ArrayList<>();
+                for (String s: productName) {
+                    productList.add(Product.findProductByName(s));
+            }
+                newFile.add(new Order(lineInfo[0], lineInfo[1], productList, lineInfo[3], Integer.parseInt(lineInfo[4]), LocalDate.parse(lineInfo[5])));
+            }
+        }
+
+        for (Order o: newFile) {
+            totalRevenue += o.getTotalPrice();
+            printOrder(o);
+        }
+        System.out.println("Total revenue of " + today + ": " + totalRevenue + " VND");
+    }
+
     public static String printProductOfOrder(Order order) {
         ArrayList<String> stringList = new ArrayList<>();
         for (Product product: order.getProductsList()) {
@@ -262,11 +292,13 @@ public class Order {
     public static void printOrder(Order order) {
         System.out.println("Order ID: " + order.getId() + '\n' +
                 "Customer ID: " + order.getCustomer()+ '\n' +
-                "Product List: "  + '\n' +
+                "Product List: " + '\n' + "-------------------------" + '\n' +
+                printProductOfOrder(order)  + '\n' +
                 "-------------------------"
                 + '\n' +
                 "Status: " + order.getStatus() + '\n' +
-                "Total price: " + order.getTotalPrice() + '\n' +
+                "Total price: " + order.getTotalPrice() + " VND" + '\n' +
+                "Date of order: " + order.getDate() + '\n' +
                 "--------------------------------------------------");
     }
 
@@ -333,6 +365,14 @@ public class Order {
 
     public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }
 
