@@ -120,15 +120,18 @@ public class Product {
 
     public static void removeProduct() throws IOException {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Please enter product that you want to remove: ");
+        System.out.println("Please enter product's name that you want to remove: ");
         String remove = scanner.nextLine();
         Scanner input = new Scanner(new File("product.db"));
         ArrayList<String> newFile = new ArrayList<>();
+        int count = 0;
         while (input.hasNext()) {
             String line = input.nextLine();
             String[] lineName = line.split(",");
             if (!remove.equalsIgnoreCase(lineName[1])) {
                 newFile.add(line);
+            } else {
+                count += 1;
             }
         }
         input.close();
@@ -138,7 +141,12 @@ public class Product {
             output.println(line);
         }
         output.close();
-        System.out.println("Remove completed!\n");
+        if (count == 1) {
+            System.out.println("Remove completed!\n");
+        } else {
+            System.out.println("The products list will remain the same\n");
+        }
+
     }
 
     public static Product findProductByName(String name) throws FileNotFoundException {
