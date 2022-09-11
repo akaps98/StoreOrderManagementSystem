@@ -191,7 +191,8 @@ public class Product {
         Comparator<Product> compareByPrice = new Comparator<Product>() {
             @Override
             public int compare(Product o1, Product o2) {
-                return Integer.toString(o1.getProductPrice()).compareTo(Integer.toString(o2.getProductPrice())) ;
+//                return Integer.toString(o1.getProductPrice()).compareTo(Integer.toString(o2.getProductPrice())) ;
+                return Integer.compare(o1.getProductPrice(), o2.getProductPrice());
             }
         };
 
@@ -206,9 +207,9 @@ public class Product {
             }
             if (invalid) continue;
             if (sortInt.equals("1")) {
-                sort.sort(compareByPrice.reversed());
-            } else {
                 sort.sort(compareByPrice);
+            } else {
+                sort.sort(compareByPrice.reversed());
             }
             break;
         }

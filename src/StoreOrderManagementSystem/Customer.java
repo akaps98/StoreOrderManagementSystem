@@ -48,7 +48,7 @@ public class Customer {
             StringBuilder e = new StringBuilder(previousMember);
             e.deleteCharAt(0);
             e.deleteCharAt(0);
-            Integer s = Integer.parseInt(String.valueOf(e));
+            int s = Integer.parseInt(String.valueOf(e));
             s += 1;
             ID = "C%s".formatted(s);
         } else {
@@ -187,7 +187,6 @@ public class Customer {
                         } else if(forgetPassword == 2) {
                             System.out.println("Type password: ");
                             inputPassword = input.nextLine();
-                            continue;
                         } else {
                             System.out.println("Please enter the valid number.");
                         }
@@ -227,7 +226,6 @@ public class Customer {
                 } else if(forgetUsername == 2) {
                     System.out.println("Type username: ");
                     inputPassword = input.nextLine();
-                    continue;
                 } else {
                     System.out.println("Please enter the valid number.");
                 }
@@ -252,7 +250,6 @@ public class Customer {
                 } else if(forgetPassword == 2) {
                     System.out.println("Type password: ");
                     inputPassword = input.nextLine();
-                    continue;
                 } else {
                     System.out.println("Please enter the valid number.");
                 }
@@ -261,7 +258,7 @@ public class Customer {
 
         int totalSpending = Integer.parseInt(spending);
 
-        Customer customer = new Customer(ID, fullname, totalSpending, phoneNumber, membership, inputUsername, realPassword);
+        Customer customer = new Customer(ID, fullname, totalSpending, membership, phoneNumber, inputUsername, realPassword);
 
         return customer;
     }
