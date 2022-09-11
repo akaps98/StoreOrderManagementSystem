@@ -1,5 +1,5 @@
 package StoreOrderManagementSystem;
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -23,6 +23,10 @@ public class Admin {
         Product.addNewProduct();
     }
 
+    public static void removeProduct() throws IOException {
+        Product.removeProduct();
+    }
+
     public static void updatePrice() throws IOException {
         Product.updatePrice();
     }
@@ -33,6 +37,7 @@ public class Admin {
 
     public static void changeStatus() throws IOException {
         Order.changeStatus();
+        Membership.updateMembership();
     }
 
     public static void reportOfTheDay() throws FileNotFoundException {

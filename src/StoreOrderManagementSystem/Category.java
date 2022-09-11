@@ -1,4 +1,5 @@
 package StoreOrderManagementSystem;
+
 import java.util.*;
 import java.io.*;
 
@@ -36,7 +37,7 @@ public class Category {
                 if (product.getCategory().equalsIgnoreCase(nameCategory)) {
                     Product.printProduct(product);
                     productList.add(product);
-                };
+                }
             }
             input.close();
             if (productList.size() == 0) {

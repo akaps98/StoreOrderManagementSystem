@@ -1,7 +1,7 @@
 package StoreOrderManagementSystem;
+
 import java.io.*;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Order {
@@ -70,7 +70,7 @@ public class Order {
     public static void createNewOrder(String customerID) throws IOException {
         Scanner file = new Scanner(new File("order.db"));
         ArrayList<String> orderList = new ArrayList<>();
-        String orderId = UUID.randomUUID().toString();
+        String orderId;
 
         while(file.hasNext()) {
             List<String> sen = Arrays.asList(file.nextLine().split("%n"));
@@ -157,7 +157,7 @@ public class Order {
         for (String i: exist) {
             if (customer.equalsIgnoreCase(i)) {
                 count++;
-            } ;
+            }
         }
         input.close();
         return count != 0;
@@ -226,19 +226,24 @@ public class Order {
         String update = scanner.nextLine();
         int count = 0;
         int count2 = 0;
+        boolean rewriteMember = false;
         Scanner input = new Scanner(new File("order.db"));
+        Scanner members = new Scanner(new File("member.db"));
         ArrayList<String> newFile = new ArrayList<>();
+        ArrayList<String> updatemember = new ArrayList<>();
 
         while (input.hasNext()) {
             String line = input.nextLine();
             String[] lineInfo = line.split(",");
+            String customerID, membership;
+            int cost, spending;
             if (update.equalsIgnoreCase(lineInfo[0])) {
-                System.out.println("Current status is " + lineInfo[3] );
+                System.out.println("Current status is " + lineInfo[3] + ".");
                 Scanner statusScanner = new Scanner(System.in);
                 if (lineInfo[3].equalsIgnoreCase("PAID")) {
                     newFile.add(line);
                     count2 += 1;
-                    System.out.println("You cannot change the status of PAID orders");
+                    System.out.println("You cannot change the status of PAID orders.\n");
                 } else {
                     while (true) {
                         System.out.println("Please enter y if you want to update the status to PAID or n to cancel: ");
@@ -246,16 +251,33 @@ public class Order {
                         if (newStatus.equalsIgnoreCase("y"))   {
                             List<String> modify = Arrays.asList(lineInfo);
                             modify.set(3, "PAID");
+                            customerID = lineInfo[1];
+                            cost = Integer.parseInt(lineInfo[4]);
+                            while(members.hasNext()) {
+                                String memberLine = members.nextLine();
+                                String[] memberInfo = memberLine.split(",");
+                                if(memberInfo[0].equals(customerID)) {
+                                    List<String> updateSpending = Arrays.asList(memberInfo);
+                                    spending = Integer.parseInt(memberInfo[2]);
+                                    spending += cost;
+                                    String newSpendingValue = Integer.toString(spending);
+                                    updateSpending.set(2, newSpendingValue);
+                                    updatemember.add(String.join(",", updateSpending));
+                                    rewriteMember = true;
+                                    continue;
+                                }
+                                updatemember.add(memberLine);
+                            }
                             newFile.add(String.join(",", modify));
                             count += 1;
                             break;
                         } else if (newStatus.equalsIgnoreCase("n")) {
                             newFile.add(line);
                             count2 += 1;
-                            System.out.println("This order's status will remain UNPAID");
+                            System.out.println("This order's status will remain UNPAID.\n");
                             break;
                         } else {
-                            System.out.println("Please enter y or n");
+                            System.out.println("Please enter y or n.\n");
                         }
                     }
                 }
@@ -266,10 +288,19 @@ public class Order {
         input.close();
 
         PrintWriter output = new PrintWriter(new FileWriter("order.db", false));
-        for (String line:newFile) {
+        for (String line : newFile) {
             output.println(line);
         }
         output.close();
+
+        if(rewriteMember) {
+            PrintWriter memberOutput = new PrintWriter(new FileWriter("member.db", false));
+            for (String line : updatemember) {
+                memberOutput.println(line);
+            }
+            memberOutput.close();
+        }
+
         if (count == 1) {
             System.out.println("Update completed!\n");
         } else if (count2 != 1) {
@@ -303,7 +334,7 @@ public class Order {
             totalRevenue += o.getTotalPrice();
             printOrder(o);
         }
-        System.out.println("Today's Total revenue(" + today + "): " + totalRevenue + " VND\n");
+        System.out.println("Today's total ordered revenue(" + today + "): " + totalRevenue + " VND\n");
     }
 
     public static String printProductOfOrder(Order order) {
@@ -353,7 +384,6 @@ public class Order {
                 System.out.printf("%s, ", product);
                 idx++;
             }
-            System.out.println("");
             System.out.println("Status: " + line[3]);
             System.out.println("Total Price: " + line[4]);
             System.out.println("Date of Order: " + line[5]);
