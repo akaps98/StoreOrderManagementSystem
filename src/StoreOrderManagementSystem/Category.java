@@ -41,7 +41,7 @@ public class Category {
             }
             input.close();
             if (productList.size() == 0) {
-                System.out.println("There is no product of this category!");
+                System.out.println("There is no product of this category!\n");
             }
             break;}
     }
