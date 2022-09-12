@@ -167,9 +167,9 @@ public class ManagementSystem {
         System.out.println("STORE ORDER MANAGEMENT SYSTEM");
         System.out.println("Instructor: Mr. Minh Vu ");
         System.out.println("Group 5");
-        System.out.println("s3916884, Kang Junsik ");
+        System.out.println("s3916884, Kang Junsik");
         System.out.println("s3926977, Doan Thien Di");
-        System.out.println("s3864235, Lee Seungmin ");
+        System.out.println("s3864235, Lee Seungmin");
         System.out.println("s3914412, Nguyen Duong Truong Thinh");
         System.out.println(":::::::::::::::::::::::::::::::::::::::");
     }
