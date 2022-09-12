@@ -363,8 +363,7 @@ public class Order {
                 "Status: " + order.getStatus() + '\n' +
                 "Total price: " + order.getTotalPrice() + " VND" + '\n' +
                 "Date of order: " + order.getDate() + '\n' +
-                //"--------------------------------------------------" +
-                "**************************************************");
+                "--------------------------------------------------");
     }
 
     public static void listAllOrders() throws FileNotFoundException{
@@ -384,6 +383,7 @@ public class Order {
                 System.out.printf("%s, ", product);
                 idx++;
             }
+            System.out.println("");
             System.out.println("Status: " + line[3]);
             System.out.println("Total Price: " + line[4]);
             System.out.println("Date of Order: " + line[5]);
