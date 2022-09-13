@@ -139,6 +139,7 @@ public class Order {
             output.println(line);
             output.close();
             System.out.println("You have successfully placed your order!");
+            System.out.println("Your order ID is " + orderId + "!");
             System.out.println("Total cost is " + totalCost + "!\n");
         } else {
             System.out.println("You've ordered nothing.\n");
